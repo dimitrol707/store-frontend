@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultProject": "main",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"]
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/js/typescript"
+    },
+    {
+      "plugin": "@nx/eslint/plugin"
+    },
+    {
+      "plugin": "@nx/vite/plugin"
+    }
+  ]
+}

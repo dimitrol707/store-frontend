@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["node", "vite/client"],
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    {
+      "path": "../../libs/shared/utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/api/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/ui/tsconfig.lib.json"
+    }
+  ]
+}
