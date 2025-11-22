@@ -5,6 +5,30 @@
  * API для управления перечислениями, пользователями и аутентификацией
  * OpenAPI spec version: 1.0
  */
+export interface CategoryCreateRequest {
+  /** @minimum 1 */
+  category_id?: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  code: string;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  label: string;
+}
+
+export interface CategoryDTO {
+  category_id?: number;
+  code?: string;
+  created_at?: string;
+  id?: number;
+  label?: string;
+  updated_at?: string;
+}
+
 export interface CreatePersonRequest {
   /**
    * @minLength 2
@@ -35,8 +59,10 @@ export interface EnumCreateRequest {
 
 export interface EnumDTO {
   code?: string;
+  created_at?: string;
   id?: number;
   label?: string;
+  updated_at?: string;
 }
 
 export interface EnumValueCreateRequest {
@@ -55,9 +81,11 @@ export interface EnumValueCreateRequest {
 
 export interface EnumValueDTO {
   code?: string;
+  created_at?: string;
   enum_id?: number;
   id?: number;
   label?: string;
+  updated_at?: string;
 }
 
 export interface ErrorResponse {
@@ -80,6 +108,12 @@ export interface LoginRequest {
   /** could be username or email */
   login: string;
   password: string;
+}
+
+export interface LoginResponse {
+  roles?: string[];
+  token?: Jwt;
+  username?: string;
 }
 
 export type Operator = typeof Operator[keyof typeof Operator];
@@ -106,6 +140,58 @@ export interface PersonDTO {
   phone?: string;
   updated_at?: string;
   user_login?: string;
+}
+
+export interface ProductCreateRequest {
+  /** @minimum 1 */
+  category_id: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  code: string;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  label: string;
+  /**
+   * @minLength 1
+   * @maxLength 30
+   */
+  price: string;
+  /** @minimum 0 */
+  quantity: number;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  sku: string;
+  status_id: number;
+}
+
+export interface ProductDTO {
+  category_id?: number;
+  code?: string;
+  created_at?: string;
+  id?: number;
+  label?: string;
+  price?: string;
+  quantity?: number;
+  sku?: string;
+  status_id?: number;
+  updated_at?: string;
+}
+
+/**
+ * Product media information
+ */
+export interface ProductMediaDTO {
+  created_at?: string;
+  id?: number;
+  link?: string;
+  product_id?: number;
+  updated_at?: string;
 }
 
 export interface RegisterUserRequest {
@@ -155,6 +241,16 @@ export interface UserDTO {
  * Критерии поиска
  */
 export type GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody = SearchCriteria;
+
+export type PostApiV1ProductMediaUploadBody = {
+  /**
+   * ID товара
+   * @minimum 1
+   */
+  product_id: number;
+  /** Изображение товара */
+  file: Blob;
+};
 
 export type DeletePersonsIdParams = {
 /**

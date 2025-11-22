@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   getGetAuthTokenQueryKey,
-  usePostLogin,
+  usePostRegister,
 } from "@store-frontend/shared-api";
 import {
   LocalStorageKey,
@@ -13,29 +13,46 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import z from "zod";
 
-const loginValidationSchema = z.object({
-  email: z.email("Enter a valid email").nonempty("Please enter your email"),
-  password: z.string().nonempty("Please enter your password"),
-});
+const signUpValidationSchema = z
+  .object({
+    email: z.email("Enter a valid email").nonempty("Please enter your email"),
+    password: z
+      .string()
+      .nonempty("Please enter your password")
+      .min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Please confirm your password"),
+    username: z.string().nonempty("Please enter your username"),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+      });
+    }
+  });
 
-type LoginFormValues = z.infer<typeof loginValidationSchema>;
+type SignUpFormValues = z.infer<typeof signUpValidationSchema>;
 
-const defaultValues: LoginFormValues = {
+const defaultValues: SignUpFormValues = {
   email: "",
   password: "",
+  confirmPassword: "",
+  username: "",
 };
 
-export function useLoginForm() {
+export function useSignUpForm() {
   const { handleSubmit, setError, ...otherFormProps } =
-    useForm<LoginFormValues>({
-      resolver: zodResolver(loginValidationSchema),
+    useForm<SignUpFormValues>({
+      resolver: zodResolver(signUpValidationSchema),
       reValidateMode: "onChange",
       defaultValues,
     });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: loginMutate } = usePostLogin({
+  const { mutateAsync: signUpMutate } = usePostRegister({
     mutation: {
       onSuccess: (data) => {
         setLocalStorageValue(LocalStorageKey.JWT, data);
@@ -45,23 +62,26 @@ export function useLoginForm() {
     },
   });
 
-  const onValidSubmit: SubmitHandler<LoginFormValues> = async ({
+  const onValidSubmit: SubmitHandler<SignUpFormValues> = async ({
     email,
     password,
+    confirmPassword,
+    username,
   }) => {
     try {
-      await loginMutate({
+      await signUpMutate({
         data: {
-          login: email,
+          email: email,
           password: password,
+          confirm_password: confirmPassword,
+          username,
         },
       });
     } catch (e) {
-      console.log(123, e);
       if (isAxiosError(e) && e.response) {
         switch (e.response.status) {
-          case 401: {
-            setError("root", { message: "Invalid email or password" });
+          case 409: {
+            setError("root", { message: "User already registered" });
             break;
           }
           default: {

@@ -2,7 +2,6 @@ import { TextField, TextFieldProps } from "@mui/material";
 import {
   Controller,
   ControllerProps,
-  ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from "react-hook-form";
@@ -15,7 +14,7 @@ type TextFieldFormProps<
   ControllerProps<TFieldValues, TName, TTransformedValues>,
   "control" | "name"
 > &
-  Omit<TextFieldProps, keyof ControllerRenderProps>;
+  TextFieldProps;
 
 export function TextFieldForm<
   TFieldValues extends FieldValues = FieldValues,

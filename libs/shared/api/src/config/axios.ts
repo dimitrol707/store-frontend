@@ -5,7 +5,7 @@ import {
 } from "@store-frontend/shared-utils";
 import axios, { AxiosRequestConfig, isAxiosError } from "axios";
 
-import { getGetAuthTokenQueryKey, Jwt } from "../model";
+import { getGetAuthTokenQueryKey, LoginResponse } from "../model";
 import { queryClient } from "./queryContext";
 
 export const instanceAxios = axios.create({
@@ -14,7 +14,7 @@ export const instanceAxios = axios.create({
 });
 
 instanceAxios.interceptors.request.use((config) => {
-  const jwt = getLocalStorageValue<{ token: Jwt }>(LocalStorageKey.JWT);
+  const jwt = getLocalStorageValue<LoginResponse>(LocalStorageKey.JWT);
   if (!jwt?.token) return config;
   config.headers.Authorization = `Bearer ${jwt.token.access_token}`;
   return config;

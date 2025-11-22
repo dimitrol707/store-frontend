@@ -1,10 +1,14 @@
 import nx from "@nx/eslint-plugin";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import reactHooks from "eslint-plugin-react-hooks";
+import react from "eslint-plugin-react";
+import { defineConfig } from "eslint/config";
 
-export default [
+export default defineConfig([
   ...nx.configs["flat/base"],
   ...nx.configs["flat/typescript"],
   ...nx.configs["flat/javascript"],
+  reactHooks.configs.flat.recommended,
   {
     ignores: ["**/dist"],
   },
@@ -12,6 +16,14 @@ export default [
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
       "simple-import-sort": simpleImportSort,
+      react,
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     rules: {
       "@nx/enforce-module-boundaries": [
@@ -48,4 +60,4 @@ export default [
       "simple-import-sort/exports": "error",
     },
   },
-];
+]);

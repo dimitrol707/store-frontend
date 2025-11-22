@@ -1,13 +1,17 @@
-import { Stack, Typography } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { IconButton, Stack, Tooltip } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { Button } from "@store-frontend/shared-ui";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "../../providers/AuthProvider";
+import { UserPopper } from "./UserPopper";
 
 export function Navbar() {
-  const { user, logout, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
+
   return (
     <Stack
       direction="row"
@@ -25,7 +29,6 @@ export function Navbar() {
     >
       {!isLoading && (
         <>
-          <Typography color="white">{user?.username}</Typography>
           {!user && (
             <Button
               variant="contained"
@@ -38,10 +41,24 @@ export function Navbar() {
             </Button>
           )}
           {user && (
-            <Button variant="contained" size="small" onClick={() => logout()}>
-              Log out
-            </Button>
+            <>
+              <Tooltip
+                title={!!user}
+                slots={{
+                  popper: UserPopper,
+                }}
+              >
+                <IconButton>
+                  <PersonIcon />
+                </IconButton>
+              </Tooltip>
+            </>
           )}
+          <Tooltip title={"Cart"} arrow>
+            <IconButton>
+              <ShoppingCartIcon />
+            </IconButton>
+          </Tooltip>
         </>
       )}
     </Stack>

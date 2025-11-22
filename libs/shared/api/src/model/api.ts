@@ -20,6 +20,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CategoryCreateRequest,
+  CategoryDTO,
   CreatePersonRequest,
   DeletePersonsIdParams,
   EnumCreateRequest,
@@ -28,9 +30,13 @@ import type {
   EnumValueDTO,
   ErrorResponse,
   GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
-  Jwt,
   LoginRequest,
+  LoginResponse,
   PersonDTO,
+  PostApiV1ProductMediaUploadBody,
+  ProductCreateRequest,
+  ProductDTO,
+  ProductMediaDTO,
   RegisterUserRequest,
   TokenRequest,
   TokenUserInfo,
@@ -48,6 +54,1158 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
+/**
+ * Возвращает список всех категорий в системе
+ * @summary Получить все категории
+ */
+export const getApiV1Categories = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/api/v1/categories`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1CategoriesQueryKey = () => {
+    return [
+    `/api/v1/categories`
+    ] as const;
+    }
+
+    
+export const getGetApiV1CategoriesQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1Categories>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1Categories>>> = ({ signal }) => getApiV1Categories(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1CategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1Categories>>>
+export type GetApiV1CategoriesQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить все категории
+ */
+
+export function useGetApiV1Categories<TData = Awaited<ReturnType<typeof getApiV1Categories>>, TError = ErrorResponse>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1CategoriesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Создает новую категорию в системе
+ * @summary Создать категорию
+ */
+export const postApiV1Categories = (
+    categoryCreateRequest: CategoryCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/api/v1/categories`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: categoryCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiV1CategoriesMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext> => {
+
+const mutationKey = ['postApiV1Categories'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1Categories>>, {data: CategoryCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiV1Categories(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiV1CategoriesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1Categories>>>
+    export type PostApiV1CategoriesMutationBody = CategoryCreateRequest
+    export type PostApiV1CategoriesMutationError = ErrorResponse
+
+    /**
+ * @summary Создать категорию
+ */
+export const usePostApiV1Categories = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postApiV1Categories>>,
+        TError,
+        {data: CategoryCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiV1CategoriesMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает категории по указанному родителю
+ * @summary Получить категории по родителю
+ */
+export const getApiV1CategoriesCategoryCategoryId = (
+    categoryId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/api/v1/categories/category/${categoryId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1CategoriesCategoryCategoryIdQueryKey = (categoryId?: number,) => {
+    return [
+    `/api/v1/categories/category/${categoryId}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1CategoriesCategoryCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesCategoryCategoryIdQueryKey(categoryId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>> = ({ signal }) => getApiV1CategoriesCategoryCategoryId(categoryId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1CategoriesCategoryCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>>
+export type GetApiV1CategoriesCategoryCategoryIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категории по родителю
+ */
+
+export function useGetApiV1CategoriesCategoryCategoryId<TData = Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError = ErrorResponse>(
+ categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1CategoriesCategoryCategoryIdQueryOptions(categoryId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает категорию по указанному коду
+ * @summary Получить категорию по коду
+ */
+export const getApiV1CategoriesCodeCode = (
+    code: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/api/v1/categories/code/${code}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1CategoriesCodeCodeQueryKey = (code?: string,) => {
+    return [
+    `/api/v1/categories/code/${code}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1CategoriesCodeCodeQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError = ErrorResponse>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesCodeCodeQueryKey(code);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>> = ({ signal }) => getApiV1CategoriesCodeCode(code, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1CategoriesCodeCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>>
+export type GetApiV1CategoriesCodeCodeQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категорию по коду
+ */
+
+export function useGetApiV1CategoriesCodeCode<TData = Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError = ErrorResponse>(
+ code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1CategoriesCodeCodeQueryOptions(code,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск категорий по заданным критериям
+ * @summary Поиск категорий
+ */
+export const postApiV1CategoriesSearch = (
+    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/api/v1/categories/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiV1CategoriesSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['postApiV1CategoriesSearch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiV1CategoriesSearch(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiV1CategoriesSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>>
+    export type PostApiV1CategoriesSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
+    export type PostApiV1CategoriesSearchMutationError = ErrorResponse
+
+    /**
+ * @summary Поиск категорий
+ */
+export const usePostApiV1CategoriesSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postApiV1CategoriesSearch>>,
+        TError,
+        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiV1CategoriesSearchMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает категорию по указанному идентификатору
+ * @summary Получить категорию по ID
+ */
+export const getApiV1CategoriesId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/api/v1/categories/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1CategoriesIdQueryKey = (id?: number,) => {
+    return [
+    `/api/v1/categories/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1CategoriesIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesId>>> = ({ signal }) => getApiV1CategoriesId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1CategoriesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesId>>>
+export type GetApiV1CategoriesIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категорию по ID
+ */
+
+export function useGetApiV1CategoriesId<TData = Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError = ErrorResponse>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1CategoriesIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет категорию по указанному идентификатору
+ * @summary Удалить категорию
+ */
+export const deleteApiV1CategoriesId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/categories/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiV1CategoriesIdMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteApiV1CategoriesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiV1CategoriesId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiV1CategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>>
+    
+    export type DeleteApiV1CategoriesIdMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить категорию
+ */
+export const useDeleteApiV1CategoriesId = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiV1CategoriesId>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiV1CategoriesIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает все изображения для указанного товара. Для доступа требуется аутентификация.
+ * @summary Получить изображения товара
+ */
+export const getApiV1ProductMediaProductProductId = (
+    productId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductMediaDTO[]>(
+      {url: `/api/v1/product-media/product/${productId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1ProductMediaProductProductIdQueryKey = (productId?: number,) => {
+    return [
+    `/api/v1/product-media/product/${productId}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1ProductMediaProductProductIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError = ErrorResponse>(productId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductMediaProductProductIdQueryKey(productId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>> = ({ signal }) => getApiV1ProductMediaProductProductId(productId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1ProductMediaProductProductIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>>
+export type GetApiV1ProductMediaProductProductIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить изображения товара
+ */
+
+export function useGetApiV1ProductMediaProductProductId<TData = Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError = ErrorResponse>(
+ productId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1ProductMediaProductProductIdQueryOptions(productId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Загружает изображение для указанного товара. Поддерживаемые форматы: JPEG, PNG, GIF. Максимальный размер файла: 10MB.
+ * @summary Загрузить изображение товара
+ */
+export const postApiV1ProductMediaUpload = (
+    postApiV1ProductMediaUploadBody: PostApiV1ProductMediaUploadBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+formData.append(`product_id`, postApiV1ProductMediaUploadBody.product_id.toString())
+formData.append(`file`, postApiV1ProductMediaUploadBody.file)
+
+      return customInstance<ProductMediaDTO>(
+      {url: `/api/v1/product-media/upload`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiV1ProductMediaUploadMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext> => {
+
+const mutationKey = ['postApiV1ProductMediaUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, {data: PostApiV1ProductMediaUploadBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiV1ProductMediaUpload(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiV1ProductMediaUploadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>>
+    export type PostApiV1ProductMediaUploadMutationBody = PostApiV1ProductMediaUploadBody
+    export type PostApiV1ProductMediaUploadMutationError = ErrorResponse
+
+    /**
+ * @summary Загрузить изображение товара
+ */
+export const usePostApiV1ProductMediaUpload = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>,
+        TError,
+        {data: PostApiV1ProductMediaUploadBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiV1ProductMediaUploadMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Удаляет изображение товара по ID. Удаляет как запись из БД, так и файл с диска.
+ * @summary Удалить изображение товара
+ */
+export const deleteApiV1ProductMediaId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/product-media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiV1ProductMediaIdMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteApiV1ProductMediaId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiV1ProductMediaId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiV1ProductMediaIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>>
+    
+    export type DeleteApiV1ProductMediaIdMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить изображение товара
+ */
+export const useDeleteApiV1ProductMediaId = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiV1ProductMediaIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает список всех продуктов в системе
+ * @summary Получить все продукты
+ */
+export const getApiV1Products = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/api/v1/products`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1ProductsQueryKey = () => {
+    return [
+    `/api/v1/products`
+    ] as const;
+    }
+
+    
+export const getGetApiV1ProductsQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1Products>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1Products>>> = ({ signal }) => getApiV1Products(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1ProductsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1Products>>>
+export type GetApiV1ProductsQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить все продукты
+ */
+
+export function useGetApiV1Products<TData = Awaited<ReturnType<typeof getApiV1Products>>, TError = ErrorResponse>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1ProductsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Создает новый продукт в системе
+ * @summary Создать продукт
+ */
+export const postApiV1Products = (
+    productCreateRequest: ProductCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/api/v1/products`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: productCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiV1ProductsMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext> => {
+
+const mutationKey = ['postApiV1Products'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1Products>>, {data: ProductCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiV1Products(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiV1ProductsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1Products>>>
+    export type PostApiV1ProductsMutationBody = ProductCreateRequest
+    export type PostApiV1ProductsMutationError = ErrorResponse
+
+    /**
+ * @summary Создать продукт
+ */
+export const usePostApiV1Products = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postApiV1Products>>,
+        TError,
+        {data: ProductCreateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiV1ProductsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает продукты по указанной категории
+ * @summary Получить продукты по категории
+ */
+export const getApiV1ProductsCategoryCategoryId = (
+    categoryId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/api/v1/products/category/${categoryId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1ProductsCategoryCategoryIdQueryKey = (categoryId?: number,) => {
+    return [
+    `/api/v1/products/category/${categoryId}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1ProductsCategoryCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsCategoryCategoryIdQueryKey(categoryId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>> = ({ signal }) => getApiV1ProductsCategoryCategoryId(categoryId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1ProductsCategoryCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>>
+export type GetApiV1ProductsCategoryCategoryIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукты по категории
+ */
+
+export function useGetApiV1ProductsCategoryCategoryId<TData = Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError = ErrorResponse>(
+ categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1ProductsCategoryCategoryIdQueryOptions(categoryId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает продукт по указанному коду
+ * @summary Получить продукт по коду
+ */
+export const getApiV1ProductsCodeCode = (
+    code: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/api/v1/products/code/${code}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1ProductsCodeCodeQueryKey = (code?: string,) => {
+    return [
+    `/api/v1/products/code/${code}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1ProductsCodeCodeQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError = ErrorResponse>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsCodeCodeQueryKey(code);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>> = ({ signal }) => getApiV1ProductsCodeCode(code, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1ProductsCodeCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>>
+export type GetApiV1ProductsCodeCodeQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукт по коду
+ */
+
+export function useGetApiV1ProductsCodeCode<TData = Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError = ErrorResponse>(
+ code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1ProductsCodeCodeQueryOptions(code,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск продуктов по заданным критериям
+ * @summary Поиск продуктов
+ */
+export const postApiV1ProductsSearch = (
+    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/api/v1/products/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getPostApiV1ProductsSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['postApiV1ProductsSearch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiV1ProductsSearch(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiV1ProductsSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1ProductsSearch>>>
+    export type PostApiV1ProductsSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
+    export type PostApiV1ProductsSearchMutationError = ErrorResponse
+
+    /**
+ * @summary Поиск продуктов
+ */
+export const usePostApiV1ProductsSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof postApiV1ProductsSearch>>,
+        TError,
+        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostApiV1ProductsSearchMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Возвращает продукт по указанному идентификатору
+ * @summary Получить продукт по ID
+ */
+export const getApiV1ProductsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/api/v1/products/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetApiV1ProductsIdQueryKey = (id?: number,) => {
+    return [
+    `/api/v1/products/${id}`
+    ] as const;
+    }
+
+    
+export const getGetApiV1ProductsIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsId>>> = ({ signal }) => getApiV1ProductsId(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetApiV1ProductsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsId>>>
+export type GetApiV1ProductsIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукт по ID
+ */
+
+export function useGetApiV1ProductsId<TData = Awaited<ReturnType<typeof getApiV1ProductsId>>, TError = ErrorResponse>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+  
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetApiV1ProductsIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет продукт по указанному идентификатору
+ * @summary Удалить продукт
+ */
+export const deleteApiV1ProductsId = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/products/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteApiV1ProductsIdMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteApiV1ProductsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteApiV1ProductsId(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteApiV1ProductsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1ProductsId>>>
+    
+    export type DeleteApiV1ProductsIdMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить продукт
+ */
+export const useDeleteApiV1ProductsId = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteApiV1ProductsId>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteApiV1ProductsIdMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Возвращает список всех доступных ролей в системе
  * @summary Получить все роли
@@ -1284,7 +2442,7 @@ export const postLogin = (
 ) => {
       
       
-      return customInstance<Jwt>(
+      return customInstance<LoginResponse>(
       {url: `/login`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: loginRequest, signal
@@ -1757,7 +2915,7 @@ export const postRegister = (
 ) => {
       
       
-      return customInstance<Jwt>(
+      return customInstance<LoginResponse>(
       {url: `/register`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: registerUserRequest, signal
