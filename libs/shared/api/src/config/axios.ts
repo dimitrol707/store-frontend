@@ -5,7 +5,7 @@ import {
 } from "@store-frontend/shared-utils";
 import axios, { AxiosRequestConfig, isAxiosError } from "axios";
 
-import { getGetAuthTokenQueryKey, LoginResponse } from "../model";
+import { getGetHeaderTokenInfoQueryKey, LoginResponse } from "../model";
 import { queryClient } from "./queryContext";
 
 export const instanceAxios = axios.create({
@@ -21,14 +21,17 @@ instanceAxios.interceptors.request.use((config) => {
 });
 
 instanceAxios.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     return response;
   },
   (error) => {
     if (isAxiosError(error))
       if (error.response?.status === 401) {
         clearLocalStorageValue(LocalStorageKey.JWT);
-        queryClient.invalidateQueries({ queryKey: getGetAuthTokenQueryKey() });
+        queryClient.invalidateQueries({
+          queryKey: getGetHeaderTokenInfoQueryKey(),
+        });
       }
     return Promise.reject(error);
   }

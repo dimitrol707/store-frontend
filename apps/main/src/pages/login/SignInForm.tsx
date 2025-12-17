@@ -6,7 +6,8 @@ import { useSignInForm } from "./useSignInForm";
 
 export default function SignInForm() {
   const { isLoading } = useAuth();
-  const { onSubmit, control, formState } = useSignInForm();
+  const { onSubmit, control, formState, isSubmitting } = useSignInForm();
+  const isLoadingForm = isLoading || isSubmitting;
   return (
     <form onSubmit={onSubmit}>
       <Stack gap={1}>
@@ -15,7 +16,7 @@ export default function SignInForm() {
           name="email"
           label="Email"
           variant="outlined"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
         <TextFieldForm
           control={control}
@@ -23,9 +24,9 @@ export default function SignInForm() {
           label="Password"
           variant="outlined"
           type="password"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
-        <Button type="submit" loading={formState.isSubmitting}>
+        <Button type="submit" loading={isLoadingForm}>
           Sign In
         </Button>
         {formState.errors.root?.message && (

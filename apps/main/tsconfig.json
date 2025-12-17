@@ -3,13 +3,19 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/features/products"
+    },
+    {
+      "path": "../../libs/features/categories"
+    },
+    {
       "path": "../../libs/shared/utils"
     },
     {
-      "path": "../../libs/shared/api"
+      "path": "../../libs/shared/ui"
     },
     {
-      "path": "../../libs/shared/ui"
+      "path": "../../libs/shared/api"
     },
     {
       "path": "./tsconfig.app.json"

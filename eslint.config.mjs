@@ -38,7 +38,11 @@ export default defineConfig([
             },
             {
               sourceTag: "scope:main",
-              onlyDependOnLibsWithTags: ["scope:main", "scope:shared"],
+              onlyDependOnLibsWithTags: [
+                "scope:main",
+                "scope:shared",
+                "scope:features",
+              ],
             },
             {
               sourceTag: "layer:utils",
@@ -51,6 +55,10 @@ export default defineConfig([
             {
               sourceTag: "layer:api",
               onlyDependOnLibsWithTags: ["layer:api", "layer:utils"],
+            },
+            {
+              sourceTag: "scope:features",
+              onlyDependOnLibsWithTags: ["scope:shared"],
             },
           ],
         },

@@ -5,89 +5,6 @@
  * API для управления перечислениями, пользователями и аутентификацией
  * OpenAPI spec version: 1.0
  */
-export interface CategoryCreateRequest {
-  /** @minimum 1 */
-  category_id?: number;
-  /**
-   * @minLength 1
-   * @maxLength 50
-   */
-  code: string;
-  /**
-   * @minLength 1
-   * @maxLength 255
-   */
-  label: string;
-}
-
-export interface CategoryDTO {
-  category_id?: number;
-  code?: string;
-  created_at?: string;
-  id?: number;
-  label?: string;
-  updated_at?: string;
-}
-
-export interface CreatePersonRequest {
-  /**
-   * @minLength 2
-   * @maxLength 50
-   */
-  firstname: string;
-  /**
-   * @minLength 2
-   * @maxLength 50
-   */
-  lastname: string;
-  phone: string;
-  user_login: string;
-}
-
-export interface EnumCreateRequest {
-  /**
-   * @minLength 1
-   * @maxLength 50
-   */
-  code: string;
-  /**
-   * @minLength 1
-   * @maxLength 255
-   */
-  label: string;
-}
-
-export interface EnumDTO {
-  code?: string;
-  created_at?: string;
-  id?: number;
-  label?: string;
-  updated_at?: string;
-}
-
-export interface EnumValueCreateRequest {
-  /**
-   * @minLength 1
-   * @maxLength 50
-   */
-  code: string;
-  enumeration_id: number;
-  /**
-   * @minLength 1
-   * @maxLength 255
-   */
-  label: string;
-}
-
-export interface EnumValueDTO {
-  code?: string;
-  created_at?: string;
-  enum_id?: number;
-  id?: number;
-  label?: string;
-  updated_at?: string;
-}
-
 export interface ErrorResponse {
   code?: string;
   message?: string;
@@ -95,6 +12,40 @@ export interface ErrorResponse {
   path?: string;
   status?: number;
   timestamp?: string;
+}
+
+export type Operator = typeof Operator[keyof typeof Operator];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Operator = {
+  OpEqual: '=',
+  OpNotEqual: '!=',
+  OpGreater: '>',
+  OpGreaterEq: '>=',
+  OpLess: '<',
+  OpLessEq: '<=',
+  OpIn: 'in',
+  OpLike: 'like',
+} as const;
+
+export interface SearchCondition {
+  field: string;
+  operation: Operator;
+  value: unknown;
+}
+
+export interface SearchCriteria {
+  /** @minimum 0 */
+  limit: number;
+  /** @minimum 0 */
+  offset?: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  order_by?: string;
+  search_conditions?: SearchCondition[];
 }
 
 export interface Jwt {
@@ -116,30 +67,156 @@ export interface LoginResponse {
   username?: string;
 }
 
-export type Operator = typeof Operator[keyof typeof Operator];
+export interface RegisterUserRequest {
+  confirm_password: string;
+  email: string;
+  /**
+   * @minLength 3
+   * @maxLength 50
+   */
+  password: string;
+  username: string;
+}
 
+export interface TokenRequest {
+  token: string;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Operator = {
-  OpEqual: '=',
-  OpNotEqual: '!=',
-  OpGreater: '>',
-  OpGreaterEq: '>=',
-  OpLess: '<',
-  OpLessEq: '<=',
-  OpIn: 'in',
-  OpLike: 'like',
-} as const;
+export interface TokenUserInfo {
+  email?: string;
+  roles?: string[];
+  username?: string;
+}
+
+export interface UserDTO {
+  created_at?: string;
+  email?: string;
+  id?: string;
+  username?: string;
+}
+
+export interface CartCreateRequest {
+  /** @minimum 1 */
+  person_id: number;
+}
+
+export interface CartDTO {
+  created_at?: string;
+  id: number;
+  person_id: number;
+  updated_at?: string;
+}
+
+export interface CartItemCreateRequest {
+  /** @minimum 1 */
+  cart_id: number;
+  /** @minimum 1 */
+  product_id: number;
+  /** @minimum 1 */
+  quantity: number;
+}
+
+export interface CartItemDTO {
+  cart_id: number;
+  created_at?: string;
+  id: number;
+  product_id: number;
+  quantity: number;
+  updated_at?: string;
+}
+
+export interface CategoryCreateRequest {
+  /** @minimum 1 */
+  category_id?: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  code: string;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  label: string;
+}
+
+export interface CategoryDTO {
+  category_id: number;
+  code: string;
+  created_at?: string;
+  id: number;
+  label: string;
+  updated_at?: string;
+}
+
+export interface EnumCreateRequest {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  code: string;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  label: string;
+}
+
+export interface EnumDTO {
+  code: string;
+  created_at?: string;
+  id: number;
+  label: string;
+  updated_at?: string;
+}
+
+export interface EnumValueCreateRequest {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  code: string;
+  enumeration_id: number;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  label: string;
+}
+
+export interface EnumValueDTO {
+  code: string;
+  created_at?: string;
+  enum_id: number;
+  id: number;
+  label: string;
+  updated_at?: string;
+}
+
+export interface CreatePersonRequest {
+  /**
+   * @minLength 2
+   * @maxLength 50
+   */
+  firstname: string;
+  /**
+   * @minLength 2
+   * @maxLength 50
+   */
+  lastname: string;
+  phone: string;
+  user_login: string;
+}
 
 export interface PersonDTO {
   created_at?: string;
   deleted_at?: string;
-  firstname?: string;
-  id?: number;
-  lastname?: string;
-  phone?: string;
+  firstname: string;
+  id: number;
+  lastname: string;
+  phone: string;
   updated_at?: string;
-  user_login?: string;
+  user_login: string;
 }
 
 export interface ProductCreateRequest {
@@ -171,15 +248,15 @@ export interface ProductCreateRequest {
 }
 
 export interface ProductDTO {
-  category_id?: number;
-  code?: string;
+  category_id: number;
+  code: string;
   created_at?: string;
-  id?: number;
-  label?: string;
-  price?: string;
-  quantity?: number;
-  sku?: string;
-  status_id?: number;
+  id: number;
+  label: string;
+  price: string;
+  quantity: number;
+  sku: string;
+  status_id: number;
   updated_at?: string;
 }
 
@@ -188,61 +265,42 @@ export interface ProductDTO {
  */
 export interface ProductMediaDTO {
   created_at?: string;
-  id?: number;
+  id: number;
   link?: string;
-  product_id?: number;
+  product_id: number;
   updated_at?: string;
 }
 
-export interface RegisterUserRequest {
-  confirm_password: string;
-  email: string;
-  /**
-   * @minLength 3
-   * @maxLength 50
-   */
-  password: string;
-  username: string;
+export interface AddToCartRequest {
+  /** @minimum 1 */
+  product_id: number;
+  /** @minimum 1 */
+  quantity: number;
 }
 
-export interface SearchCondition {
-  field: string;
-  operation: Operator;
-  value: unknown;
-}
-
-export interface SearchCriteria {
-  /** @minimum 0 */
-  limit: number;
-  /** @minimum 0 */
-  offset?: number;
-  order_by?: string;
-  search_conditions?: SearchCondition[];
-}
-
-export interface TokenRequest {
-  token: string;
-}
-
-export interface TokenUserInfo {
-  email?: string;
-  roles?: string[];
-  username?: string;
-}
-
-export interface UserDTO {
-  created_at?: string;
-  email?: string;
-  id?: string;
-  username?: string;
+export interface PurchaseRequest {
+  /** @minimum 1 */
+  cart_id: number;
 }
 
 /**
  * Критерии поиска
  */
-export type GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody = SearchCriteria;
+export type GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody = SearchCriteria;
 
-export type PostApiV1ProductMediaUploadBody = {
+/**
+ * Данные для создания элемента корзины
+ */
+export type PkgBackendstoryCartItemCartItemCreateRequestBody = CartItemCreateRequest;
+
+export type DeletePersonParams = {
+/**
+ * Флаг мягкого удаления (true/false)
+ */
+soft?: boolean;
+};
+
+export type UploadProductMediaImageBody = {
   /**
    * ID товара
    * @minimum 1
@@ -250,12 +308,5 @@ export type PostApiV1ProductMediaUploadBody = {
   product_id: number;
   /** Изображение товара */
   file: Blob;
-};
-
-export type DeletePersonsIdParams = {
-/**
- * Флаг мягкого удаления (true/false)
- */
-soft?: boolean;
 };
 

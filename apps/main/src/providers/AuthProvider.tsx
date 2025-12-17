@@ -1,12 +1,10 @@
 import {
-  getGetAuthTokenQueryKey,
-  LoginResponse,
+  getGetHeaderTokenInfoQueryKey,
   TokenUserInfo,
-  useGetAuthToken,
+  useGetHeaderTokenInfo,
 } from "@store-frontend/shared-api";
 import {
   clearLocalStorageValue,
-  getLocalStorageValue,
   LocalStorageKey,
 } from "@store-frontend/shared-utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -29,22 +27,20 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 type AuthProviderProps = PropsWithChildren;
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: tokenData, isLoading } = useGetAuthToken({
+  const { data: tokenData, isLoading } = useGetHeaderTokenInfo({
     query: {
-      queryKey: getGetAuthTokenQueryKey(),
       retry: false,
-      enabled: !!getLocalStorageValue<LoginResponse>(LocalStorageKey.JWT),
     },
   });
   const queryClient = useQueryClient();
 
   const logout = useCallback<AuthContextValue["logout"]>(() => {
     clearLocalStorageValue(LocalStorageKey.JWT);
-    queryClient.setQueryData(getGetAuthTokenQueryKey(), null);
+    queryClient.setQueryData(getGetHeaderTokenInfoQueryKey(), null);
   }, [queryClient]);
 
   const value = useMemo(
-    () => ({ user: tokenData, isLoading, logout }),
+    () => ({ user: tokenData, isLoading: isLoading, logout }),
     [tokenData, logout, isLoading]
   );
 

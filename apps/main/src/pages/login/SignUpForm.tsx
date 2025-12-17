@@ -6,7 +6,8 @@ import { useSignUpForm } from "./useSignUpForm";
 
 export default function SignUpForm() {
   const { isLoading } = useAuth();
-  const { onSubmit, control, formState } = useSignUpForm();
+  const { onSubmit, control, formState, isSubmitting } = useSignUpForm();
+  const isLoadingForm = isLoading || isSubmitting;
   return (
     <form onSubmit={onSubmit}>
       <Stack gap={1}>
@@ -15,14 +16,14 @@ export default function SignUpForm() {
           name="username"
           label="Username"
           variant="outlined"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
         <TextFieldForm
           control={control}
           name="email"
           label="Email"
           variant="outlined"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
         <TextFieldForm
           control={control}
@@ -30,7 +31,7 @@ export default function SignUpForm() {
           label="Password"
           variant="outlined"
           type="password"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
         <TextFieldForm
           control={control}
@@ -38,9 +39,9 @@ export default function SignUpForm() {
           label="Confirm Password"
           variant="outlined"
           type="password"
-          disabled={isLoading}
+          disabled={isLoadingForm}
         />
-        <Button type="submit" loading={formState.isSubmitting}>
+        <Button type="submit" loading={isLoadingForm}>
           Sign Up
         </Button>
         {formState.errors.root?.message && (

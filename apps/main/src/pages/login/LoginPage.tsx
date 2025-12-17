@@ -1,5 +1,11 @@
-import { Stack, Tab, Tabs, TabsOwnProps } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  CircularProgress,
+  Stack,
+  Tab,
+  Tabs,
+  TabsOwnProps,
+} from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "../../providers/AuthProvider";
@@ -12,19 +18,26 @@ enum LoginTab {
 }
 
 export default function LoginPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [tabValue, setTabValue] = useState<LoginTab>(LoginTab.SignIn);
-
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
 
   const handleChangeTab: TabsOwnProps["onChange"] = (e, value) => {
     setTabValue(value);
   };
+
+  if (isLoading) {
+    return (
+      <Stack width={1} height={1} alignItems="center" justifyContent="center">
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (user) {
+    navigate("/");
+  }
+
   return (
     <Stack
       width={1}

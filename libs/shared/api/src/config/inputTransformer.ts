@@ -3,14 +3,21 @@ import type { OpenAPIObject } from "openapi3-ts/oas30";
 
 export default (api: OpenAPIObject): OpenAPIObject => {
   const schemas = _.get(api, "components.schemas");
-  if (!schemas) return api;
+  const paths = _.get(api, "paths");
+  if (!schemas || !paths) return api;
 
   const renameMap = _.mapKeys(schemas, (_, key) => {
     const base = key.split(".").pop() || key;
     return base.replace(/[^A-Za-z0-9._-]/g, "_");
   });
 
+  const renamePaths = _.mapKeys(paths, (_, key) => {
+    const base = key.match(/^\/api\/v1\/(.+)$/);
+    return base ? base[1] : key;
+  });
+
   _.set(api, "components.schemas", renameMap);
+  _.set(api, "paths", renamePaths);
 
   traverseRefs(api);
   return api;

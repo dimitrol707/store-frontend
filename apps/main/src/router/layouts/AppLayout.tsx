@@ -1,4 +1,4 @@
-import { CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import { Suspense } from "react";
 import { Outlet } from "react-router";
 
@@ -21,7 +21,9 @@ export function AppLayout() {
           </Stack>
         }
       >
-        <Outlet />
+        <Box padding={1}>
+          <Outlet />
+        </Box>
       </Suspense>
     </Stack>
   );

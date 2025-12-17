@@ -15,7 +15,7 @@ type UserPopperProps = PopperProps;
 export function UserPopper(props: UserPopperProps) {
   const { user, logout } = useAuth();
   return (
-    <Popper {...props} placement="bottom-end">
+    <Popper {...props} placement="bottom-end" sx={{ zIndex: 1001 }}>
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
           <Paper

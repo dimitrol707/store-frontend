@@ -1,5 +1,7 @@
 import { defineConfig } from "orval";
 
+import { outputClient } from "./src/config/outputClient";
+
 export default defineConfig({
   api: {
     input: {
@@ -9,7 +11,7 @@ export default defineConfig({
       },
     },
     output: {
-      client: "react-query",
+      client: outputClient,
       httpClient: "axios",
       mode: "split",
       target: "./src/model/api.ts",
@@ -17,6 +19,15 @@ export default defineConfig({
         mutator: {
           path: "./src/config/axios.ts",
           name: "customInstance",
+        },
+        operations: {
+          getProductSearch: {
+            query: {
+              useQuery: true,
+              useInfinite: true,
+              useInfiniteQueryParam: "offset",
+            },
+          },
         },
       },
     },

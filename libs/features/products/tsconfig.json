@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../../shared/ui"
+    },
+    {
+      "path": "../../shared/api"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ],
+  "extends": "../../../tsconfig.base.json"
+}

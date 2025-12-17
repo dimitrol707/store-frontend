@@ -18,12 +18,13 @@ export function Navbar() {
       alignItems="center"
       justifyContent="flex-end"
       sx={{
-        position: "sticky",
+        position: "fixed",
         top: 0,
         flex: "0 1 64px",
         backgroundColor: blue["500"],
         width: "100%",
         padding: "12px",
+        zIndex: 1000,
       }}
       gap={1}
     >
@@ -54,13 +55,13 @@ export function Navbar() {
               </Tooltip>
             </>
           )}
-          <Tooltip title={"Cart"} arrow>
-            <IconButton>
-              <ShoppingCartIcon />
-            </IconButton>
-          </Tooltip>
         </>
       )}
+      <Tooltip title={"Cart"} arrow>
+        <IconButton>
+          <ShoppingCartIcon />
+        </IconButton>
+      </Tooltip>
     </Stack>
   );
 }

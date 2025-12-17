@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  getGetAuthTokenQueryKey,
-  usePostRegister,
+  getGetHeaderTokenInfoQueryKey,
+  useRegisterUser,
 } from "@store-frontend/shared-api";
 import {
   LocalStorageKey,
@@ -52,12 +52,35 @@ export function useSignUpForm() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { mutateAsync: signUpMutate } = usePostRegister({
+  const {
+    mutate: signUpMutate,
+    isPending,
+    isSuccess,
+  } = useRegisterUser({
     mutation: {
-      onSuccess: (data) => {
-        setLocalStorageValue(LocalStorageKey.JWT, data);
-        queryClient.invalidateQueries({ queryKey: getGetAuthTokenQueryKey() });
+      onSuccess: async (login) => {
+        setLocalStorageValue(LocalStorageKey.JWT, login);
+        await queryClient.invalidateQueries({
+          queryKey: getGetHeaderTokenInfoQueryKey(),
+          refetchType: "active",
+        });
         navigate("/");
+      },
+      onError: (e) => {
+        if (isAxiosError(e) && e.response) {
+          switch (e.response.status) {
+            case 409: {
+              setError("root", { message: "User already registered" });
+              break;
+            }
+            default: {
+              setError("root", {
+                message: e.response.data.message ?? "Unknown error",
+              });
+              break;
+            }
+          }
+        }
       },
     },
   });
@@ -68,35 +91,19 @@ export function useSignUpForm() {
     confirmPassword,
     username,
   }) => {
-    try {
-      await signUpMutate({
-        data: {
-          email: email,
-          password: password,
-          confirm_password: confirmPassword,
-          username,
-        },
-      });
-    } catch (e) {
-      if (isAxiosError(e) && e.response) {
-        switch (e.response.status) {
-          case 409: {
-            setError("root", { message: "User already registered" });
-            break;
-          }
-          default: {
-            setError("root", {
-              message: e.response.data.message ?? "Unknown error",
-            });
-            break;
-          }
-        }
-      }
-    }
+    signUpMutate({
+      data: {
+        email: email,
+        password: password,
+        confirm_password: confirmPassword,
+        username,
+      },
+    });
   };
 
   return {
     onSubmit: handleSubmit(onValidSubmit),
+    isSubmitting: isPending || isSuccess,
     ...otherFormProps,
   };
 }

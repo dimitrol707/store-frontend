@@ -11,13 +11,19 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
+      "path": "../../libs/features/products/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/features/categories/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/shared/utils/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/shared/api/tsconfig.lib.json"
+      "path": "../../libs/shared/ui/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/shared/ui/tsconfig.lib.json"
+      "path": "../../libs/shared/api/tsconfig.lib.json"
     }
   ]
 }

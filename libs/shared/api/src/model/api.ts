@@ -6,40 +6,51 @@
  * OpenAPI spec version: 1.0
  */
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  InfiniteData,
   MutationFunction,
+  QueryClient,
   QueryFunction,
   QueryKey,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
-  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
+  AddToCartRequest,
+  CartCreateRequest,
+  CartDTO,
+  CartItemDTO,
   CategoryCreateRequest,
   CategoryDTO,
   CreatePersonRequest,
-  DeletePersonsIdParams,
+  DeletePersonParams,
   EnumCreateRequest,
   EnumDTO,
   EnumValueCreateRequest,
   EnumValueDTO,
   ErrorResponse,
-  GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+  GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
   LoginRequest,
   LoginResponse,
   PersonDTO,
-  PostApiV1ProductMediaUploadBody,
+  PkgBackendstoryCartItemCartItemCreateRequestBody,
   ProductCreateRequest,
   ProductDTO,
   ProductMediaDTO,
+  PurchaseRequest,
   RegisterUserRequest,
   TokenRequest,
   TokenUserInfo,
+  UploadProductMediaImageBody,
   UserDTO
 } from './api.schemas';
 
@@ -55,1162 +66,10 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 /**
- * Возвращает список всех категорий в системе
- * @summary Получить все категории
- */
-export const getApiV1Categories = (
-    
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO[]>(
-      {url: `/api/v1/categories`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1CategoriesQueryKey = () => {
-    return [
-    `/api/v1/categories`
-    ] as const;
-    }
-
-    
-export const getGetApiV1CategoriesQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1Categories>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1Categories>>> = ({ signal }) => getApiV1Categories(requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1CategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1Categories>>>
-export type GetApiV1CategoriesQueryError = ErrorResponse
-
-
-/**
- * @summary Получить все категории
- */
-
-export function useGetApiV1Categories<TData = Awaited<ReturnType<typeof getApiV1Categories>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Categories>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1CategoriesQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Создает новую категорию в системе
- * @summary Создать категорию
- */
-export const postApiV1Categories = (
-    categoryCreateRequest: CategoryCreateRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO>(
-      {url: `/api/v1/categories`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: categoryCreateRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiV1CategoriesMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext> => {
-
-const mutationKey = ['postApiV1Categories'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1Categories>>, {data: CategoryCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiV1Categories(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiV1CategoriesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1Categories>>>
-    export type PostApiV1CategoriesMutationBody = CategoryCreateRequest
-    export type PostApiV1CategoriesMutationError = ErrorResponse
-
-    /**
- * @summary Создать категорию
- */
-export const usePostApiV1Categories = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Categories>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postApiV1Categories>>,
-        TError,
-        {data: CategoryCreateRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiV1CategoriesMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает категории по указанному родителю
- * @summary Получить категории по родителю
- */
-export const getApiV1CategoriesCategoryCategoryId = (
-    categoryId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO[]>(
-      {url: `/api/v1/categories/category/${categoryId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1CategoriesCategoryCategoryIdQueryKey = (categoryId?: number,) => {
-    return [
-    `/api/v1/categories/category/${categoryId}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1CategoriesCategoryCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesCategoryCategoryIdQueryKey(categoryId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>> = ({ signal }) => getApiV1CategoriesCategoryCategoryId(categoryId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1CategoriesCategoryCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>>
-export type GetApiV1CategoriesCategoryCategoryIdQueryError = ErrorResponse
-
-
-/**
- * @summary Получить категории по родителю
- */
-
-export function useGetApiV1CategoriesCategoryCategoryId<TData = Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError = ErrorResponse>(
- categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1CategoriesCategoryCategoryIdQueryOptions(categoryId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Возвращает категорию по указанному коду
- * @summary Получить категорию по коду
- */
-export const getApiV1CategoriesCodeCode = (
-    code: string,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO>(
-      {url: `/api/v1/categories/code/${code}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1CategoriesCodeCodeQueryKey = (code?: string,) => {
-    return [
-    `/api/v1/categories/code/${code}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1CategoriesCodeCodeQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError = ErrorResponse>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesCodeCodeQueryKey(code);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>> = ({ signal }) => getApiV1CategoriesCodeCode(code, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1CategoriesCodeCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>>
-export type GetApiV1CategoriesCodeCodeQueryError = ErrorResponse
-
-
-/**
- * @summary Получить категорию по коду
- */
-
-export function useGetApiV1CategoriesCodeCode<TData = Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError = ErrorResponse>(
- code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1CategoriesCodeCodeQueryOptions(code,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Выполняет поиск категорий по заданным критериям
- * @summary Поиск категорий
- */
-export const postApiV1CategoriesSearch = (
-    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO[]>(
-      {url: `/api/v1/categories/search`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiV1CategoriesSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
-
-const mutationKey = ['postApiV1CategoriesSearch'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiV1CategoriesSearch(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiV1CategoriesSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>>
-    export type PostApiV1CategoriesSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
-    export type PostApiV1CategoriesSearchMutationError = ErrorResponse
-
-    /**
- * @summary Поиск категорий
- */
-export const usePostApiV1CategoriesSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1CategoriesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postApiV1CategoriesSearch>>,
-        TError,
-        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiV1CategoriesSearchMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает категорию по указанному идентификатору
- * @summary Получить категорию по ID
- */
-export const getApiV1CategoriesId = (
-    id: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CategoryDTO>(
-      {url: `/api/v1/categories/${id}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1CategoriesIdQueryKey = (id?: number,) => {
-    return [
-    `/api/v1/categories/${id}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1CategoriesIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1CategoriesIdQueryKey(id);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1CategoriesId>>> = ({ signal }) => getApiV1CategoriesId(id, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1CategoriesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1CategoriesId>>>
-export type GetApiV1CategoriesIdQueryError = ErrorResponse
-
-
-/**
- * @summary Получить категорию по ID
- */
-
-export function useGetApiV1CategoriesId<TData = Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError = ErrorResponse>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1CategoriesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1CategoriesIdQueryOptions(id,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Удаляет категорию по указанному идентификатору
- * @summary Удалить категорию
- */
-export const deleteApiV1CategoriesId = (
-    id: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/categories/${id}`, method: 'DELETE'
-    },
-      options);
-    }
-  
-
-
-export const getDeleteApiV1CategoriesIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['deleteApiV1CategoriesId'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
-
-          return  deleteApiV1CategoriesId(id,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteApiV1CategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>>
-    
-    export type DeleteApiV1CategoriesIdMutationError = ErrorResponse
-
-    /**
- * @summary Удалить категорию
- */
-export const useDeleteApiV1CategoriesId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1CategoriesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deleteApiV1CategoriesId>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
-
-      const mutationOptions = getDeleteApiV1CategoriesIdMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает все изображения для указанного товара. Для доступа требуется аутентификация.
- * @summary Получить изображения товара
- */
-export const getApiV1ProductMediaProductProductId = (
-    productId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductMediaDTO[]>(
-      {url: `/api/v1/product-media/product/${productId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1ProductMediaProductProductIdQueryKey = (productId?: number,) => {
-    return [
-    `/api/v1/product-media/product/${productId}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1ProductMediaProductProductIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError = ErrorResponse>(productId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductMediaProductProductIdQueryKey(productId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>> = ({ signal }) => getApiV1ProductMediaProductProductId(productId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1ProductMediaProductProductIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>>
-export type GetApiV1ProductMediaProductProductIdQueryError = ErrorResponse
-
-
-/**
- * @summary Получить изображения товара
- */
-
-export function useGetApiV1ProductMediaProductProductId<TData = Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError = ErrorResponse>(
- productId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductMediaProductProductId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1ProductMediaProductProductIdQueryOptions(productId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Загружает изображение для указанного товара. Поддерживаемые форматы: JPEG, PNG, GIF. Максимальный размер файла: 10MB.
- * @summary Загрузить изображение товара
- */
-export const postApiV1ProductMediaUpload = (
-    postApiV1ProductMediaUploadBody: PostApiV1ProductMediaUploadBody,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      const formData = new FormData();
-formData.append(`product_id`, postApiV1ProductMediaUploadBody.product_id.toString())
-formData.append(`file`, postApiV1ProductMediaUploadBody.file)
-
-      return customInstance<ProductMediaDTO>(
-      {url: `/api/v1/product-media/upload`, method: 'POST',
-      headers: {'Content-Type': 'multipart/form-data', },
-       data: formData, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiV1ProductMediaUploadMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext> => {
-
-const mutationKey = ['postApiV1ProductMediaUpload'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, {data: PostApiV1ProductMediaUploadBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiV1ProductMediaUpload(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiV1ProductMediaUploadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>>
-    export type PostApiV1ProductMediaUploadMutationBody = PostApiV1ProductMediaUploadBody
-    export type PostApiV1ProductMediaUploadMutationError = ErrorResponse
-
-    /**
- * @summary Загрузить изображение товара
- */
-export const usePostApiV1ProductMediaUpload = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>, TError,{data: PostApiV1ProductMediaUploadBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postApiV1ProductMediaUpload>>,
-        TError,
-        {data: PostApiV1ProductMediaUploadBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiV1ProductMediaUploadMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Удаляет изображение товара по ID. Удаляет как запись из БД, так и файл с диска.
- * @summary Удалить изображение товара
- */
-export const deleteApiV1ProductMediaId = (
-    id: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/product-media/${id}`, method: 'DELETE'
-    },
-      options);
-    }
-  
-
-
-export const getDeleteApiV1ProductMediaIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['deleteApiV1ProductMediaId'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
-
-          return  deleteApiV1ProductMediaId(id,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteApiV1ProductMediaIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>>
-    
-    export type DeleteApiV1ProductMediaIdMutationError = ErrorResponse
-
-    /**
- * @summary Удалить изображение товара
- */
-export const useDeleteApiV1ProductMediaId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deleteApiV1ProductMediaId>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
-
-      const mutationOptions = getDeleteApiV1ProductMediaIdMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает список всех продуктов в системе
- * @summary Получить все продукты
- */
-export const getApiV1Products = (
-    
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO[]>(
-      {url: `/api/v1/products`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1ProductsQueryKey = () => {
-    return [
-    `/api/v1/products`
-    ] as const;
-    }
-
-    
-export const getGetApiV1ProductsQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1Products>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1Products>>> = ({ signal }) => getApiV1Products(requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1ProductsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1Products>>>
-export type GetApiV1ProductsQueryError = ErrorResponse
-
-
-/**
- * @summary Получить все продукты
- */
-
-export function useGetApiV1Products<TData = Awaited<ReturnType<typeof getApiV1Products>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1Products>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1ProductsQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Создает новый продукт в системе
- * @summary Создать продукт
- */
-export const postApiV1Products = (
-    productCreateRequest: ProductCreateRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO>(
-      {url: `/api/v1/products`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: productCreateRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiV1ProductsMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext> => {
-
-const mutationKey = ['postApiV1Products'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1Products>>, {data: ProductCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiV1Products(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiV1ProductsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1Products>>>
-    export type PostApiV1ProductsMutationBody = ProductCreateRequest
-    export type PostApiV1ProductsMutationError = ErrorResponse
-
-    /**
- * @summary Создать продукт
- */
-export const usePostApiV1Products = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1Products>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postApiV1Products>>,
-        TError,
-        {data: ProductCreateRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiV1ProductsMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает продукты по указанной категории
- * @summary Получить продукты по категории
- */
-export const getApiV1ProductsCategoryCategoryId = (
-    categoryId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO[]>(
-      {url: `/api/v1/products/category/${categoryId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1ProductsCategoryCategoryIdQueryKey = (categoryId?: number,) => {
-    return [
-    `/api/v1/products/category/${categoryId}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1ProductsCategoryCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsCategoryCategoryIdQueryKey(categoryId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>> = ({ signal }) => getApiV1ProductsCategoryCategoryId(categoryId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1ProductsCategoryCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>>
-export type GetApiV1ProductsCategoryCategoryIdQueryError = ErrorResponse
-
-
-/**
- * @summary Получить продукты по категории
- */
-
-export function useGetApiV1ProductsCategoryCategoryId<TData = Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError = ErrorResponse>(
- categoryId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCategoryCategoryId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1ProductsCategoryCategoryIdQueryOptions(categoryId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Возвращает продукт по указанному коду
- * @summary Получить продукт по коду
- */
-export const getApiV1ProductsCodeCode = (
-    code: string,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO>(
-      {url: `/api/v1/products/code/${code}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1ProductsCodeCodeQueryKey = (code?: string,) => {
-    return [
-    `/api/v1/products/code/${code}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1ProductsCodeCodeQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError = ErrorResponse>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsCodeCodeQueryKey(code);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>> = ({ signal }) => getApiV1ProductsCodeCode(code, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1ProductsCodeCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>>
-export type GetApiV1ProductsCodeCodeQueryError = ErrorResponse
-
-
-/**
- * @summary Получить продукт по коду
- */
-
-export function useGetApiV1ProductsCodeCode<TData = Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError = ErrorResponse>(
- code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1ProductsCodeCodeQueryOptions(code,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Выполняет поиск продуктов по заданным критериям
- * @summary Поиск продуктов
- */
-export const postApiV1ProductsSearch = (
-    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO[]>(
-      {url: `/api/v1/products/search`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
-    },
-      options);
-    }
-  
-
-
-export const getPostApiV1ProductsSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
-
-const mutationKey = ['postApiV1ProductsSearch'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiV1ProductsSearch(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiV1ProductsSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postApiV1ProductsSearch>>>
-    export type PostApiV1ProductsSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
-    export type PostApiV1ProductsSearchMutationError = ErrorResponse
-
-    /**
- * @summary Поиск продуктов
- */
-export const usePostApiV1ProductsSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiV1ProductsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postApiV1ProductsSearch>>,
-        TError,
-        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostApiV1ProductsSearchMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
- * Возвращает продукт по указанному идентификатору
- * @summary Получить продукт по ID
- */
-export const getApiV1ProductsId = (
-    id: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ProductDTO>(
-      {url: `/api/v1/products/${id}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-
-
-export const getGetApiV1ProductsIdQueryKey = (id?: number,) => {
-    return [
-    `/api/v1/products/${id}`
-    ] as const;
-    }
-
-    
-export const getGetApiV1ProductsIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiV1ProductsId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiV1ProductsIdQueryKey(id);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiV1ProductsId>>> = ({ signal }) => getApiV1ProductsId(id, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetApiV1ProductsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiV1ProductsId>>>
-export type GetApiV1ProductsIdQueryError = ErrorResponse
-
-
-/**
- * @summary Получить продукт по ID
- */
-
-export function useGetApiV1ProductsId<TData = Awaited<ReturnType<typeof getApiV1ProductsId>>, TError = ErrorResponse>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getApiV1ProductsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetApiV1ProductsIdQueryOptions(id,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-
-/**
- * Удаляет продукт по указанному идентификатору
- * @summary Удалить продукт
- */
-export const deleteApiV1ProductsId = (
-    id: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/products/${id}`, method: 'DELETE'
-    },
-      options);
-    }
-  
-
-
-export const getDeleteApiV1ProductsIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext> => {
-
-const mutationKey = ['deleteApiV1ProductsId'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
-
-          return  deleteApiV1ProductsId(id,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteApiV1ProductsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiV1ProductsId>>>
-    
-    export type DeleteApiV1ProductsIdMutationError = ErrorResponse
-
-    /**
- * @summary Удалить продукт
- */
-export const useDeleteApiV1ProductsId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiV1ProductsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deleteApiV1ProductsId>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
-
-      const mutationOptions = getDeleteApiV1ProductsIdMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
  * Возвращает список всех доступных ролей в системе
  * @summary Получить все роли
  */
-export const getAuthRoles = (
+export const getRoles = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1225,47 +84,47 @@ export const getAuthRoles = (
 
 
 
-export const getGetAuthRolesQueryKey = () => {
+export const getGetRolesQueryKey = () => {
     return [
-    `/auth/roles`
+    'auth','roles'
     ] as const;
     }
 
     
-export const getGetAuthRolesQueryOptions = <TData = Awaited<ReturnType<typeof getAuthRoles>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthRoles>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetRolesQueryOptions = <TData = Awaited<ReturnType<typeof getRoles>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAuthRolesQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetRolesQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthRoles>>> = ({ signal }) => getAuthRoles(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRoles>>> = ({ signal }) => getRoles(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthRoles>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAuthRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthRoles>>>
-export type GetAuthRolesQueryError = ErrorResponse
+export type GetRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getRoles>>>
+export type GetRolesQueryError = ErrorResponse
 
 
 /**
  * @summary Получить все роли
  */
 
-export function useGetAuthRoles<TData = Awaited<ReturnType<typeof getAuthRoles>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthRoles>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetRoles<TData = Awaited<ReturnType<typeof getRoles>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAuthRolesQueryOptions(options)
+  const queryOptions = getGetRolesQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1280,7 +139,7 @@ export function useGetAuthRoles<TData = Awaited<ReturnType<typeof getAuthRoles>>
  * Возвращает информацию из текущего токена
  * @summary Получить информацию из текущего токена
  */
-export const getAuthToken = (
+export const getHeaderTokenInfo = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1295,47 +154,47 @@ export const getAuthToken = (
 
 
 
-export const getGetAuthTokenQueryKey = () => {
+export const getGetHeaderTokenInfoQueryKey = () => {
     return [
-    `/auth/token`
+    'auth','token'
     ] as const;
     }
 
     
-export const getGetAuthTokenQueryOptions = <TData = Awaited<ReturnType<typeof getAuthToken>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthToken>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetHeaderTokenInfoQueryOptions = <TData = Awaited<ReturnType<typeof getHeaderTokenInfo>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHeaderTokenInfo>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAuthTokenQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetHeaderTokenInfoQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthToken>>> = ({ signal }) => getAuthToken(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getHeaderTokenInfo>>> = ({ signal }) => getHeaderTokenInfo(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthToken>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getHeaderTokenInfo>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAuthTokenQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthToken>>>
-export type GetAuthTokenQueryError = ErrorResponse
+export type GetHeaderTokenInfoQueryResult = NonNullable<Awaited<ReturnType<typeof getHeaderTokenInfo>>>
+export type GetHeaderTokenInfoQueryError = ErrorResponse
 
 
 /**
  * @summary Получить информацию из текущего токена
  */
 
-export function useGetAuthToken<TData = Awaited<ReturnType<typeof getAuthToken>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthToken>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetHeaderTokenInfo<TData = Awaited<ReturnType<typeof getHeaderTokenInfo>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getHeaderTokenInfo>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAuthTokenQueryOptions(options)
+  const queryOptions = getGetHeaderTokenInfoQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1350,7 +209,7 @@ export function useGetAuthToken<TData = Awaited<ReturnType<typeof getAuthToken>>
  * Возвращает информацию из токена
  * @summary Получить информацию из токена
  */
-export const postAuthToken = (
+export const getBodyTokenInfo = (
     tokenRequest: TokenRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1366,11 +225,11 @@ export const postAuthToken = (
   
 
 
-export const getPostAuthTokenMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthToken>>, TError,{data: TokenRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postAuthToken>>, TError,{data: TokenRequest}, TContext> => {
+export const getGetBodyTokenInfoMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getBodyTokenInfo>>, TError,{data: TokenRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getBodyTokenInfo>>, TError,{data: TokenRequest}, TContext> => {
 
-const mutationKey = ['postAuthToken'];
+const mutationKey = ['getBodyTokenInfo'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1380,10 +239,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuthToken>>, {data: TokenRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getBodyTokenInfo>>, {data: TokenRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postAuthToken(data,requestOptions)
+          return  getBodyTokenInfo(data,requestOptions)
         }
 
         
@@ -1391,32 +250,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostAuthTokenMutationResult = NonNullable<Awaited<ReturnType<typeof postAuthToken>>>
-    export type PostAuthTokenMutationBody = TokenRequest
-    export type PostAuthTokenMutationError = ErrorResponse
+    export type GetBodyTokenInfoMutationResult = NonNullable<Awaited<ReturnType<typeof getBodyTokenInfo>>>
+    export type GetBodyTokenInfoMutationBody = TokenRequest
+    export type GetBodyTokenInfoMutationError = ErrorResponse
 
     /**
  * @summary Получить информацию из токена
  */
-export const usePostAuthToken = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuthToken>>, TError,{data: TokenRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postAuthToken>>,
-        TError,
-        {data: TokenRequest},
-        TContext
-      > => {
+export const useGetBodyTokenInfo = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getBodyTokenInfo>>, TError,{data: TokenRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostAuthTokenMutationOptions(options);
+      const mutationOptions = getGetBodyTokenInfoMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает список всех зарегистрированных пользователей
  * @summary Получить всех пользователей
  */
-export const getAuthUsers = (
+export const getUsers = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1431,47 +285,47 @@ export const getAuthUsers = (
 
 
 
-export const getGetAuthUsersQueryKey = () => {
+export const getGetUsersQueryKey = () => {
     return [
-    `/auth/users`
+    'auth','users'
     ] as const;
     }
 
     
-export const getGetAuthUsersQueryOptions = <TData = Awaited<ReturnType<typeof getAuthUsers>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsers>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetUsersQueryOptions = <TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAuthUsersQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetUsersQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthUsers>>> = ({ signal }) => getAuthUsers(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({ signal }) => getUsers(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthUsers>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAuthUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthUsers>>>
-export type GetAuthUsersQueryError = ErrorResponse
+export type GetUsersQueryResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>
+export type GetUsersQueryError = ErrorResponse
 
 
 /**
  * @summary Получить всех пользователей
  */
 
-export function useGetAuthUsers<TData = Awaited<ReturnType<typeof getAuthUsers>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsers>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetUsers<TData = Awaited<ReturnType<typeof getUsers>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAuthUsersQueryOptions(options)
+  const queryOptions = getGetUsersQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1486,7 +340,7 @@ export function useGetAuthUsers<TData = Awaited<ReturnType<typeof getAuthUsers>>
  * Возвращает пользователя по username
  * @summary Получить пользователя
  */
-export const getAuthUsersUsername = (
+export const getUser = (
     username: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1501,47 +355,47 @@ export const getAuthUsersUsername = (
 
 
 
-export const getGetAuthUsersUsernameQueryKey = (username?: string,) => {
+export const getGetUserQueryKey = (username?: string,) => {
     return [
-    `/auth/users/${username}`
+    'auth','users',username
     ] as const;
     }
 
     
-export const getGetAuthUsersUsernameQueryOptions = <TData = Awaited<ReturnType<typeof getAuthUsersUsername>>, TError = ErrorResponse>(username: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsername>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetUserQueryOptions = <TData = Awaited<ReturnType<typeof getUser>>, TError = ErrorResponse>(username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAuthUsersUsernameQueryKey(username);
+  const queryKey =  queryOptions?.queryKey ?? getGetUserQueryKey(username);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthUsersUsername>>> = ({ signal }) => getAuthUsersUsername(username, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUser>>> = ({ signal }) => getUser(username, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(username), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsername>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(username), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAuthUsersUsernameQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthUsersUsername>>>
-export type GetAuthUsersUsernameQueryError = ErrorResponse
+export type GetUserQueryResult = NonNullable<Awaited<ReturnType<typeof getUser>>>
+export type GetUserQueryError = ErrorResponse
 
 
 /**
  * @summary Получить пользователя
  */
 
-export function useGetAuthUsersUsername<TData = Awaited<ReturnType<typeof getAuthUsersUsername>>, TError = ErrorResponse>(
- username: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsername>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError = ErrorResponse>(
+ username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAuthUsersUsernameQueryOptions(username,options)
+  const queryOptions = getGetUserQueryOptions(username,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1556,7 +410,7 @@ export function useGetAuthUsersUsername<TData = Awaited<ReturnType<typeof getAut
  * Возвращает список ролей для указанного пользователя
  * @summary Получить роли пользователя
  */
-export const getAuthUsersUsernameRoles = (
+export const getUserRoles = (
     username: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1571,47 +425,47 @@ export const getAuthUsersUsernameRoles = (
 
 
 
-export const getGetAuthUsersUsernameRolesQueryKey = (username?: string,) => {
+export const getGetUserRolesQueryKey = (username?: string,) => {
     return [
-    `/auth/users/${username}/roles`
+    'auth','users',username,'roles'
     ] as const;
     }
 
     
-export const getGetAuthUsersUsernameRolesQueryOptions = <TData = Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>, TError = ErrorResponse>(username: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetUserRolesQueryOptions = <TData = Awaited<ReturnType<typeof getUserRoles>>, TError = ErrorResponse>(username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetAuthUsersUsernameRolesQueryKey(username);
+  const queryKey =  queryOptions?.queryKey ?? getGetUserRolesQueryKey(username);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>> = ({ signal }) => getAuthUsersUsernameRoles(username, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserRoles>>> = ({ signal }) => getUserRoles(username, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(username), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(username), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserRoles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAuthUsersUsernameRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>>
-export type GetAuthUsersUsernameRolesQueryError = ErrorResponse
+export type GetUserRolesQueryResult = NonNullable<Awaited<ReturnType<typeof getUserRoles>>>
+export type GetUserRolesQueryError = ErrorResponse
 
 
 /**
  * @summary Получить роли пользователя
  */
 
-export function useGetAuthUsersUsernameRoles<TData = Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>, TError = ErrorResponse>(
- username: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAuthUsersUsernameRoles>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetUserRoles<TData = Awaited<ReturnType<typeof getUserRoles>>, TError = ErrorResponse>(
+ username: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getUserRoles>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetAuthUsersUsernameRolesQueryOptions(username,options)
+  const queryOptions = getGetUserRolesQueryOptions(username,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1623,10 +477,1054 @@ export function useGetAuthUsersUsernameRoles<TData = Awaited<ReturnType<typeof g
 
 
 /**
+ * Создает новый элемент корзины
+ * @summary Создать элемент корзины
+ */
+export const updateCartItem = (
+    pkgBackendstoryCartItemCartItemCreateRequestBody: PkgBackendstoryCartItemCartItemCreateRequestBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<CartItemDTO>(
+      {url: `/cart-items`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: pkgBackendstoryCartItemCartItemCreateRequestBody
+    },
+      options);
+    }
+  
+
+
+export const getUpdateCartItemMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext> => {
+
+const mutationKey = ['updateCartItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCartItem>>, {data: PkgBackendstoryCartItemCartItemCreateRequestBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateCartItem(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof updateCartItem>>>
+    export type UpdateCartItemMutationBody = PkgBackendstoryCartItemCartItemCreateRequestBody
+    export type UpdateCartItemMutationError = ErrorResponse
+
+    /**
+ * @summary Создать элемент корзины
+ */
+export const useUpdateCartItem = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getUpdateCartItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Создает новый элемент корзины
+ * @summary Создать элемент корзины
+ */
+export const createCartItem = (
+    pkgBackendstoryCartItemCartItemCreateRequestBody: PkgBackendstoryCartItemCartItemCreateRequestBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartItemDTO>(
+      {url: `/cart-items`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: pkgBackendstoryCartItemCartItemCreateRequestBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateCartItemMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext> => {
+
+const mutationKey = ['createCartItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCartItem>>, {data: PkgBackendstoryCartItemCartItemCreateRequestBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCartItem(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof createCartItem>>>
+    export type CreateCartItemMutationBody = PkgBackendstoryCartItemCartItemCreateRequestBody
+    export type CreateCartItemMutationError = ErrorResponse
+
+    /**
+ * @summary Создать элемент корзины
+ */
+export const useCreateCartItem = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateCartItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает все элементы корзины по указанному идентификатору корзины
+ * @summary Получить элементы корзины по ID корзины
+ */
+export const getCartItemByCartId = (
+    cartId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartItemDTO[]>(
+      {url: `/cart-items/cart/${cartId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCartItemByCartIdQueryKey = (cartId?: number,) => {
+    return [
+    'cart-items','cart',cartId
+    ] as const;
+    }
+
+    
+export const getGetCartItemByCartIdQueryOptions = <TData = Awaited<ReturnType<typeof getCartItemByCartId>>, TError = ErrorResponse>(cartId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartItemByCartId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCartItemByCartIdQueryKey(cartId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCartItemByCartId>>> = ({ signal }) => getCartItemByCartId(cartId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(cartId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCartItemByCartId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCartItemByCartIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCartItemByCartId>>>
+export type GetCartItemByCartIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить элементы корзины по ID корзины
+ */
+
+export function useGetCartItemByCartId<TData = Awaited<ReturnType<typeof getCartItemByCartId>>, TError = ErrorResponse>(
+ cartId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartItemByCartId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCartItemByCartIdQueryOptions(cartId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск элементов корзины по заданным критериям
+ * @summary Поиск элементов корзины
+ */
+export const getCartItemSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartItemDTO[]>(
+      {url: `/cart-items/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getGetCartItemSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['getCartItemSearch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCartItemSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  getCartItemSearch(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetCartItemSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCartItemSearch>>>
+    export type GetCartItemSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetCartItemSearchMutationError = ErrorResponse
+
+    /**
+ * @summary Поиск элементов корзины
+ */
+export const useGetCartItemSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getGetCartItemSearchMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает элемент корзины по указанному идентификатору
+ * @summary Получить элемент корзины по ID
+ */
+export const getCartItemById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartItemDTO>(
+      {url: `/cart-items/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCartItemByIdQueryKey = (id?: number,) => {
+    return [
+    'cart-items',id
+    ] as const;
+    }
+
+    
+export const getGetCartItemByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCartItemById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartItemById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCartItemByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCartItemById>>> = ({ signal }) => getCartItemById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCartItemById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCartItemByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCartItemById>>>
+export type GetCartItemByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить элемент корзины по ID
+ */
+
+export function useGetCartItemById<TData = Awaited<ReturnType<typeof getCartItemById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartItemById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCartItemByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Создает новую корзину для пользователя
+ * @summary Создать корзину
+ */
+export const createCart = (
+    cartCreateRequest: CartCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartDTO>(
+      {url: `/carts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: cartCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateCartMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCart>>, TError,{data: CartCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCart>>, TError,{data: CartCreateRequest}, TContext> => {
+
+const mutationKey = ['createCart'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCart>>, {data: CartCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCart(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCartMutationResult = NonNullable<Awaited<ReturnType<typeof createCart>>>
+    export type CreateCartMutationBody = CartCreateRequest
+    export type CreateCartMutationError = ErrorResponse
+
+    /**
+ * @summary Создать корзину
+ */
+export const useCreateCart = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCart>>, TError,{data: CartCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateCartMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает корзину по указанному идентификатору пользователя
+ * @summary Получить корзину по ID пользователя
+ */
+export const getCartByPersonId = (
+    personId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartDTO>(
+      {url: `/carts/person/${personId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCartByPersonIdQueryKey = (personId?: number,) => {
+    return [
+    'carts','person',personId
+    ] as const;
+    }
+
+    
+export const getGetCartByPersonIdQueryOptions = <TData = Awaited<ReturnType<typeof getCartByPersonId>>, TError = ErrorResponse>(personId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartByPersonId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCartByPersonIdQueryKey(personId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCartByPersonId>>> = ({ signal }) => getCartByPersonId(personId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(personId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCartByPersonId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCartByPersonIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCartByPersonId>>>
+export type GetCartByPersonIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить корзину по ID пользователя
+ */
+
+export function useGetCartByPersonId<TData = Awaited<ReturnType<typeof getCartByPersonId>>, TError = ErrorResponse>(
+ personId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartByPersonId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCartByPersonIdQueryOptions(personId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск корзин по заданным критериям
+ * @summary Поиск корзин
+ */
+export const getCartSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartDTO[]>(
+      {url: `/carts/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getGetCartSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['getCartSearch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCartSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  getCartSearch(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetCartSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCartSearch>>>
+    export type GetCartSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetCartSearchMutationError = ErrorResponse
+
+    /**
+ * @summary Поиск корзин
+ */
+export const useGetCartSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getGetCartSearchMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает корзину по указанному идентификатору
+ * @summary Получить корзину по ID
+ */
+export const getCartById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CartDTO>(
+      {url: `/carts/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCartByIdQueryKey = (id?: number,) => {
+    return [
+    'carts',id
+    ] as const;
+    }
+
+    
+export const getGetCartByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCartById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCartByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCartById>>> = ({ signal }) => getCartById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCartById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCartByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCartById>>>
+export type GetCartByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить корзину по ID
+ */
+
+export function useGetCartById<TData = Awaited<ReturnType<typeof getCartById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCartById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCartByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает список всех категорий в системе
+ * @summary Получить все категории
+ */
+export const getCategoryAll = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/categories`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCategoryAllQueryKey = () => {
+    return [
+    'categories'
+    ] as const;
+    }
+
+    
+export const getGetCategoryAllQueryOptions = <TData = Awaited<ReturnType<typeof getCategoryAll>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCategoryAllQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCategoryAll>>> = ({ signal }) => getCategoryAll(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCategoryAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCategoryAllQueryResult = NonNullable<Awaited<ReturnType<typeof getCategoryAll>>>
+export type GetCategoryAllQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить все категории
+ */
+
+export function useGetCategoryAll<TData = Awaited<ReturnType<typeof getCategoryAll>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCategoryAllQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Создает новую категорию в системе
+ * @summary Создать категорию
+ */
+export const createCategory = (
+    categoryCreateRequest: CategoryCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/categories`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: categoryCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateCategoryMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCategory>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCategory>>, TError,{data: CategoryCreateRequest}, TContext> => {
+
+const mutationKey = ['createCategory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCategory>>, {data: CategoryCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCategory(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof createCategory>>>
+    export type CreateCategoryMutationBody = CategoryCreateRequest
+    export type CreateCategoryMutationError = ErrorResponse
+
+    /**
+ * @summary Создать категорию
+ */
+export const useCreateCategory = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCategory>>, TError,{data: CategoryCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateCategoryMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает категории по указанному родителю
+ * @summary Получить категории по родителю
+ */
+export const getCategoryByCategoryId = (
+    categoryId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/categories/category/${categoryId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCategoryByCategoryIdQueryKey = (categoryId?: number,) => {
+    return [
+    'categories','category',categoryId
+    ] as const;
+    }
+
+    
+export const getGetCategoryByCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getCategoryByCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCategoryId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCategoryByCategoryIdQueryKey(categoryId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCategoryByCategoryId>>> = ({ signal }) => getCategoryByCategoryId(categoryId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCategoryId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCategoryByCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCategoryByCategoryId>>>
+export type GetCategoryByCategoryIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категории по родителю
+ */
+
+export function useGetCategoryByCategoryId<TData = Awaited<ReturnType<typeof getCategoryByCategoryId>>, TError = ErrorResponse>(
+ categoryId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCategoryId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCategoryByCategoryIdQueryOptions(categoryId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает категорию по указанному коду
+ * @summary Получить категорию по коду
+ */
+export const getCategoryByCode = (
+    code: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/categories/code/${code}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCategoryByCodeQueryKey = (code?: string,) => {
+    return [
+    'categories','code',code
+    ] as const;
+    }
+
+    
+export const getGetCategoryByCodeQueryOptions = <TData = Awaited<ReturnType<typeof getCategoryByCode>>, TError = ErrorResponse>(code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCategoryByCodeQueryKey(code);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCategoryByCode>>> = ({ signal }) => getCategoryByCode(code, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCode>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCategoryByCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getCategoryByCode>>>
+export type GetCategoryByCodeQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категорию по коду
+ */
+
+export function useGetCategoryByCode<TData = Awaited<ReturnType<typeof getCategoryByCode>>, TError = ErrorResponse>(
+ code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCategoryByCodeQueryOptions(code,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск категорий по заданным критериям
+ * @summary Поиск категорий
+ */
+export const getCategorySearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO[]>(
+      {url: `/categories/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getGetCategorySearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['getCategorySearch'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCategorySearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  getCategorySearch(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetCategorySearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCategorySearch>>>
+    export type GetCategorySearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetCategorySearchMutationError = ErrorResponse
+
+    /**
+ * @summary Поиск категорий
+ */
+export const useGetCategorySearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getGetCategorySearchMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает категорию по указанному идентификатору
+ * @summary Получить категорию по ID
+ */
+export const getCategoryById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<CategoryDTO>(
+      {url: `/categories/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetCategoryByIdQueryKey = (id?: number,) => {
+    return [
+    'categories',id
+    ] as const;
+    }
+
+    
+export const getGetCategoryByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCategoryById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCategoryByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCategoryById>>> = ({ signal }) => getCategoryById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCategoryById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCategoryByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCategoryById>>>
+export type GetCategoryByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить категорию по ID
+ */
+
+export function useGetCategoryById<TData = Awaited<ReturnType<typeof getCategoryById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCategoryById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCategoryByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет категорию по указанному идентификатору
+ * @summary Удалить категорию
+ */
+export const deleteCategory = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/categories/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteCategoryMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteCategory>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteCategory>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteCategory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteCategory>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteCategory(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof deleteCategory>>>
+    
+    export type DeleteCategoryMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить категорию
+ */
+export const useDeleteCategory = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteCategory>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getDeleteCategoryMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * Возвращает список всех значений перечислений
  * @summary Получить все значения перечислений
  */
-export const getEnumerationValues = (
+export const getEnumValueAll = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1641,47 +1539,47 @@ export const getEnumerationValues = (
 
 
 
-export const getGetEnumerationValuesQueryKey = () => {
+export const getGetEnumValueAllQueryKey = () => {
     return [
-    `/enumeration-values`
+    'enumeration-values'
     ] as const;
     }
 
     
-export const getGetEnumerationValuesQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerationValues>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValues>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumValueAllQueryOptions = <TData = Awaited<ReturnType<typeof getEnumValueAll>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationValuesQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumValueAllQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerationValues>>> = ({ signal }) => getEnumerationValues(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumValueAll>>> = ({ signal }) => getEnumValueAll(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValues>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumValueAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationValuesQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerationValues>>>
-export type GetEnumerationValuesQueryError = ErrorResponse
+export type GetEnumValueAllQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumValueAll>>>
+export type GetEnumValueAllQueryError = ErrorResponse
 
 
 /**
  * @summary Получить все значения перечислений
  */
 
-export function useGetEnumerationValues<TData = Awaited<ReturnType<typeof getEnumerationValues>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValues>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumValueAll<TData = Awaited<ReturnType<typeof getEnumValueAll>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationValuesQueryOptions(options)
+  const queryOptions = getGetEnumValueAllQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1696,7 +1594,7 @@ export function useGetEnumerationValues<TData = Awaited<ReturnType<typeof getEnu
  * Создает новое значение перечисления
  * @summary Создать значение перечисления
  */
-export const postEnumerationValues = (
+export const createEnumValue = (
     enumValueCreateRequest: EnumValueCreateRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1712,11 +1610,11 @@ export const postEnumerationValues = (
   
 
 
-export const getPostEnumerationValuesMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValues>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValues>>, TError,{data: EnumValueCreateRequest}, TContext> => {
+export const getCreateEnumValueMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext> => {
 
-const mutationKey = ['postEnumerationValues'];
+const mutationKey = ['createEnumValue'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1726,10 +1624,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEnumerationValues>>, {data: EnumValueCreateRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnumValue>>, {data: EnumValueCreateRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postEnumerationValues(data,requestOptions)
+          return  createEnumValue(data,requestOptions)
         }
 
         
@@ -1737,32 +1635,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostEnumerationValuesMutationResult = NonNullable<Awaited<ReturnType<typeof postEnumerationValues>>>
-    export type PostEnumerationValuesMutationBody = EnumValueCreateRequest
-    export type PostEnumerationValuesMutationError = ErrorResponse
+    export type CreateEnumValueMutationResult = NonNullable<Awaited<ReturnType<typeof createEnumValue>>>
+    export type CreateEnumValueMutationBody = EnumValueCreateRequest
+    export type CreateEnumValueMutationError = ErrorResponse
 
     /**
  * @summary Создать значение перечисления
  */
-export const usePostEnumerationValues = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValues>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postEnumerationValues>>,
-        TError,
-        {data: EnumValueCreateRequest},
-        TContext
-      > => {
+export const useCreateEnumValue = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostEnumerationValuesMutationOptions(options);
+      const mutationOptions = getCreateEnumValueMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает все значения для указанного перечисления
  * @summary Получить значения по ID перечисления
  */
-export const getEnumerationValuesEnumerationEnumerationId = (
+export const getEnumValueByEnumId = (
     enumerationId: number,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1777,47 +1670,47 @@ export const getEnumerationValuesEnumerationEnumerationId = (
 
 
 
-export const getGetEnumerationValuesEnumerationEnumerationIdQueryKey = (enumerationId?: number,) => {
+export const getGetEnumValueByEnumIdQueryKey = (enumerationId?: number,) => {
     return [
-    `/enumeration-values/enumeration/${enumerationId}`
+    'enumeration-values','enumeration',enumerationId
     ] as const;
     }
 
     
-export const getGetEnumerationValuesEnumerationEnumerationIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>, TError = ErrorResponse>(enumerationId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumValueByEnumIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumValueByEnumId>>, TError = ErrorResponse>(enumerationId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueByEnumId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationValuesEnumerationEnumerationIdQueryKey(enumerationId);
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumValueByEnumIdQueryKey(enumerationId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>> = ({ signal }) => getEnumerationValuesEnumerationEnumerationId(enumerationId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumValueByEnumId>>> = ({ signal }) => getEnumValueByEnumId(enumerationId, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(enumerationId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(enumerationId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumValueByEnumId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationValuesEnumerationEnumerationIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>>
-export type GetEnumerationValuesEnumerationEnumerationIdQueryError = ErrorResponse
+export type GetEnumValueByEnumIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumValueByEnumId>>>
+export type GetEnumValueByEnumIdQueryError = ErrorResponse
 
 
 /**
  * @summary Получить значения по ID перечисления
  */
 
-export function useGetEnumerationValuesEnumerationEnumerationId<TData = Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>, TError = ErrorResponse>(
- enumerationId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesEnumerationEnumerationId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumValueByEnumId<TData = Awaited<ReturnType<typeof getEnumValueByEnumId>>, TError = ErrorResponse>(
+ enumerationId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueByEnumId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationValuesEnumerationEnumerationIdQueryOptions(enumerationId,options)
+  const queryOptions = getGetEnumValueByEnumIdQueryOptions(enumerationId,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1832,8 +1725,8 @@ export function useGetEnumerationValuesEnumerationEnumerationId<TData = Awaited<
  * Выполняет поиск значений перечислений по заданным критериям
  * @summary Поиск значений перечислений
  */
-export const postEnumerationValuesSearch = (
-    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+export const getEnumValueSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -1841,18 +1734,18 @@ export const postEnumerationValuesSearch = (
       return customInstance<EnumValueDTO[]>(
       {url: `/enumeration-values/search`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
     },
       options);
     }
   
 
 
-export const getPostEnumerationValuesSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValuesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValuesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
+export const getGetEnumValueSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['postEnumerationValuesSearch'];
+const mutationKey = ['getEnumValueSearch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1862,10 +1755,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEnumerationValuesSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getEnumValueSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postEnumerationValuesSearch(data,requestOptions)
+          return  getEnumValueSearch(data,requestOptions)
         }
 
         
@@ -1873,32 +1766,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostEnumerationValuesSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postEnumerationValuesSearch>>>
-    export type PostEnumerationValuesSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
-    export type PostEnumerationValuesSearchMutationError = ErrorResponse
+    export type GetEnumValueSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getEnumValueSearch>>>
+    export type GetEnumValueSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetEnumValueSearchMutationError = ErrorResponse
 
     /**
  * @summary Поиск значений перечислений
  */
-export const usePostEnumerationValuesSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationValuesSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postEnumerationValuesSearch>>,
-        TError,
-        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
-        TContext
-      > => {
+export const useGetEnumValueSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostEnumerationValuesSearchMutationOptions(options);
+      const mutationOptions = getGetEnumValueSearchMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает значение перечисления по указанному идентификатору
  * @summary Получить значение перечисления по ID
  */
-export const getEnumerationValuesId = (
+export const getEnumValueById = (
     id: number,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1913,47 +1801,47 @@ export const getEnumerationValuesId = (
 
 
 
-export const getGetEnumerationValuesIdQueryKey = (id?: number,) => {
+export const getGetEnumValueByIdQueryKey = (id?: number,) => {
     return [
-    `/enumeration-values/${id}`
+    'enumeration-values',id
     ] as const;
     }
 
     
-export const getGetEnumerationValuesIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerationValuesId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumValueByIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumValueById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationValuesIdQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumValueByIdQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerationValuesId>>> = ({ signal }) => getEnumerationValuesId(id, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumValueById>>> = ({ signal }) => getEnumValueById(id, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesId>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumValueById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationValuesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerationValuesId>>>
-export type GetEnumerationValuesIdQueryError = ErrorResponse
+export type GetEnumValueByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumValueById>>>
+export type GetEnumValueByIdQueryError = ErrorResponse
 
 
 /**
  * @summary Получить значение перечисления по ID
  */
 
-export function useGetEnumerationValuesId<TData = Awaited<ReturnType<typeof getEnumerationValuesId>>, TError = ErrorResponse>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationValuesId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumValueById<TData = Awaited<ReturnType<typeof getEnumValueById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumValueById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationValuesIdQueryOptions(id,options)
+  const queryOptions = getGetEnumValueByIdQueryOptions(id,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -1968,7 +1856,7 @@ export function useGetEnumerationValuesId<TData = Awaited<ReturnType<typeof getE
  * Удаляет значение перечисления по указанному идентификатору
  * @summary Удалить значение перечисления
  */
-export const deleteEnumerationValuesId = (
+export const deleteEnumValue = (
     id: number,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -1981,11 +1869,11 @@ export const deleteEnumerationValuesId = (
   
 
 
-export const getDeleteEnumerationValuesIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationValuesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationValuesId>>, TError,{id: number}, TContext> => {
+export const getDeleteEnumValueMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumValue>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteEnumValue>>, TError,{id: number}, TContext> => {
 
-const mutationKey = ['deleteEnumerationValuesId'];
+const mutationKey = ['deleteEnumValue'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1995,10 +1883,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEnumerationValuesId>>, {id: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEnumValue>>, {id: number}> = (props) => {
           const {id} = props ?? {};
 
-          return  deleteEnumerationValuesId(id,requestOptions)
+          return  deleteEnumValue(id,requestOptions)
         }
 
         
@@ -2006,32 +1894,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteEnumerationValuesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEnumerationValuesId>>>
+    export type DeleteEnumValueMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEnumValue>>>
     
-    export type DeleteEnumerationValuesIdMutationError = ErrorResponse
+    export type DeleteEnumValueMutationError = ErrorResponse
 
     /**
  * @summary Удалить значение перечисления
  */
-export const useDeleteEnumerationValuesId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationValuesId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deleteEnumerationValuesId>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
+export const useDeleteEnumValue = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumValue>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getDeleteEnumerationValuesIdMutationOptions(options);
+      const mutationOptions = getDeleteEnumValueMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает список всех перечислений в системе
  * @summary Получить все перечисления
  */
-export const getEnumerations = (
+export const getEnumAll = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2046,47 +1929,47 @@ export const getEnumerations = (
 
 
 
-export const getGetEnumerationsQueryKey = () => {
+export const getGetEnumAllQueryKey = () => {
     return [
-    `/enumerations`
+    'enumerations'
     ] as const;
     }
 
     
-export const getGetEnumerationsQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerations>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumAllQueryOptions = <TData = Awaited<ReturnType<typeof getEnumAll>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumAllQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerations>>> = ({ signal }) => getEnumerations(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumAll>>> = ({ signal }) => getEnumAll(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerations>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationsQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerations>>>
-export type GetEnumerationsQueryError = ErrorResponse
+export type GetEnumAllQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumAll>>>
+export type GetEnumAllQueryError = ErrorResponse
 
 
 /**
  * @summary Получить все перечисления
  */
 
-export function useGetEnumerations<TData = Awaited<ReturnType<typeof getEnumerations>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerations>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumAll<TData = Awaited<ReturnType<typeof getEnumAll>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationsQueryOptions(options)
+  const queryOptions = getGetEnumAllQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2101,7 +1984,7 @@ export function useGetEnumerations<TData = Awaited<ReturnType<typeof getEnumerat
  * Создает новое перечисление в системе
  * @summary Создать перечисление
  */
-export const postEnumerations = (
+export const createEnum = (
     enumCreateRequest: EnumCreateRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2117,11 +2000,11 @@ export const postEnumerations = (
   
 
 
-export const getPostEnumerationsMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerations>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postEnumerations>>, TError,{data: EnumCreateRequest}, TContext> => {
+export const getCreateEnumMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext> => {
 
-const mutationKey = ['postEnumerations'];
+const mutationKey = ['createEnum'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2131,10 +2014,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEnumerations>>, {data: EnumCreateRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnum>>, {data: EnumCreateRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postEnumerations(data,requestOptions)
+          return  createEnum(data,requestOptions)
         }
 
         
@@ -2142,32 +2025,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostEnumerationsMutationResult = NonNullable<Awaited<ReturnType<typeof postEnumerations>>>
-    export type PostEnumerationsMutationBody = EnumCreateRequest
-    export type PostEnumerationsMutationError = ErrorResponse
+    export type CreateEnumMutationResult = NonNullable<Awaited<ReturnType<typeof createEnum>>>
+    export type CreateEnumMutationBody = EnumCreateRequest
+    export type CreateEnumMutationError = ErrorResponse
 
     /**
  * @summary Создать перечисление
  */
-export const usePostEnumerations = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerations>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postEnumerations>>,
-        TError,
-        {data: EnumCreateRequest},
-        TContext
-      > => {
+export const useCreateEnum = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostEnumerationsMutationOptions(options);
+      const mutationOptions = getCreateEnumMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает перечисление по указанному коду
  * @summary Получить перечисление по коду
  */
-export const getEnumerationsCodeCode = (
+export const getEnumByCode = (
     code: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2182,47 +2060,47 @@ export const getEnumerationsCodeCode = (
 
 
 
-export const getGetEnumerationsCodeCodeQueryKey = (code?: string,) => {
+export const getGetEnumByCodeQueryKey = (code?: string,) => {
     return [
-    `/enumerations/code/${code}`
+    'enumerations','code',code
     ] as const;
     }
 
     
-export const getGetEnumerationsCodeCodeQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerationsCodeCode>>, TError = ErrorResponse>(code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumByCodeQueryOptions = <TData = Awaited<ReturnType<typeof getEnumByCode>>, TError = ErrorResponse>(code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationsCodeCodeQueryKey(code);
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumByCodeQueryKey(code);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerationsCodeCode>>> = ({ signal }) => getEnumerationsCodeCode(code, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumByCode>>> = ({ signal }) => getEnumByCode(code, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsCodeCode>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumByCode>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationsCodeCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerationsCodeCode>>>
-export type GetEnumerationsCodeCodeQueryError = ErrorResponse
+export type GetEnumByCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumByCode>>>
+export type GetEnumByCodeQueryError = ErrorResponse
 
 
 /**
  * @summary Получить перечисление по коду
  */
 
-export function useGetEnumerationsCodeCode<TData = Awaited<ReturnType<typeof getEnumerationsCodeCode>>, TError = ErrorResponse>(
- code: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsCodeCode>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumByCode<TData = Awaited<ReturnType<typeof getEnumByCode>>, TError = ErrorResponse>(
+ code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationsCodeCodeQueryOptions(code,options)
+  const queryOptions = getGetEnumByCodeQueryOptions(code,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2237,8 +2115,8 @@ export function useGetEnumerationsCodeCode<TData = Awaited<ReturnType<typeof get
  * Выполняет поиск перечислений по заданным критериям
  * @summary Поиск перечислений
  */
-export const postEnumerationsSearch = (
-    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+export const getEnumSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -2246,18 +2124,18 @@ export const postEnumerationsSearch = (
       return customInstance<EnumDTO[]>(
       {url: `/enumerations/search`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
     },
       options);
     }
   
 
 
-export const getPostEnumerationsSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postEnumerationsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
+export const getGetEnumSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['postEnumerationsSearch'];
+const mutationKey = ['getEnumSearch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2267,10 +2145,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postEnumerationsSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getEnumSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postEnumerationsSearch(data,requestOptions)
+          return  getEnumSearch(data,requestOptions)
         }
 
         
@@ -2278,32 +2156,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostEnumerationsSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postEnumerationsSearch>>>
-    export type PostEnumerationsSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
-    export type PostEnumerationsSearchMutationError = ErrorResponse
+    export type GetEnumSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getEnumSearch>>>
+    export type GetEnumSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetEnumSearchMutationError = ErrorResponse
 
     /**
  * @summary Поиск перечислений
  */
-export const usePostEnumerationsSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postEnumerationsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postEnumerationsSearch>>,
-        TError,
-        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
-        TContext
-      > => {
+export const useGetEnumSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostEnumerationsSearchMutationOptions(options);
+      const mutationOptions = getGetEnumSearchMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает перечисление по указанному идентификатору
  * @summary Получить перечисление по ID
  */
-export const getEnumerationsId = (
+export const getEnumById = (
     id: number,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2318,47 +2191,47 @@ export const getEnumerationsId = (
 
 
 
-export const getGetEnumerationsIdQueryKey = (id?: number,) => {
+export const getGetEnumByIdQueryKey = (id?: number,) => {
     return [
-    `/enumerations/${id}`
+    'enumerations',id
     ] as const;
     }
 
     
-export const getGetEnumerationsIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumerationsId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetEnumByIdQueryOptions = <TData = Awaited<ReturnType<typeof getEnumById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetEnumerationsIdQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetEnumByIdQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumerationsId>>> = ({ signal }) => getEnumerationsId(id, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnumById>>> = ({ signal }) => getEnumById(id, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsId>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnumById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetEnumerationsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumerationsId>>>
-export type GetEnumerationsIdQueryError = ErrorResponse
+export type GetEnumByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getEnumById>>>
+export type GetEnumByIdQueryError = ErrorResponse
 
 
 /**
  * @summary Получить перечисление по ID
  */
 
-export function useGetEnumerationsId<TData = Awaited<ReturnType<typeof getEnumerationsId>>, TError = ErrorResponse>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnumerationsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetEnumById<TData = Awaited<ReturnType<typeof getEnumById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEnumById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetEnumerationsIdQueryOptions(id,options)
+  const queryOptions = getGetEnumByIdQueryOptions(id,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2373,7 +2246,7 @@ export function useGetEnumerationsId<TData = Awaited<ReturnType<typeof getEnumer
  * Удаляет перечисление по указанному идентификатору
  * @summary Удалить перечисление
  */
-export const deleteEnumerationsId = (
+export const deleteEnum = (
     id: number,
  options?: SecondParameter<typeof customInstance>,) => {
       
@@ -2386,11 +2259,11 @@ export const deleteEnumerationsId = (
   
 
 
-export const getDeleteEnumerationsIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationsId>>, TError,{id: number}, TContext> => {
+export const getDeleteEnumMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnum>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteEnum>>, TError,{id: number}, TContext> => {
 
-const mutationKey = ['deleteEnumerationsId'];
+const mutationKey = ['deleteEnum'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2400,10 +2273,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEnumerationsId>>, {id: number}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteEnum>>, {id: number}> = (props) => {
           const {id} = props ?? {};
 
-          return  deleteEnumerationsId(id,requestOptions)
+          return  deleteEnum(id,requestOptions)
         }
 
         
@@ -2411,32 +2284,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeleteEnumerationsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEnumerationsId>>>
+    export type DeleteEnumMutationResult = NonNullable<Awaited<ReturnType<typeof deleteEnum>>>
     
-    export type DeleteEnumerationsIdMutationError = ErrorResponse
+    export type DeleteEnumMutationError = ErrorResponse
 
     /**
  * @summary Удалить перечисление
  */
-export const useDeleteEnumerationsId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnumerationsId>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deleteEnumerationsId>>,
-        TError,
-        {id: number},
-        TContext
-      > => {
+export const useDeleteEnum = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteEnum>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getDeleteEnumerationsIdMutationOptions(options);
+      const mutationOptions = getDeleteEnumMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Выполняет вход пользователя и возвращает токен
  * @summary Аутентификация пользователя
  */
-export const postLogin = (
+export const loginUser = (
     loginRequest: LoginRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2452,11 +2320,11 @@ export const postLogin = (
   
 
 
-export const getPostLoginMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postLogin>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postLogin>>, TError,{data: LoginRequest}, TContext> => {
+export const getLoginUserMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginUser>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof loginUser>>, TError,{data: LoginRequest}, TContext> => {
 
-const mutationKey = ['postLogin'];
+const mutationKey = ['loginUser'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2466,10 +2334,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postLogin>>, {data: LoginRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof loginUser>>, {data: LoginRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postLogin(data,requestOptions)
+          return  loginUser(data,requestOptions)
         }
 
         
@@ -2477,32 +2345,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postLogin>>>
-    export type PostLoginMutationBody = LoginRequest
-    export type PostLoginMutationError = ErrorResponse
+    export type LoginUserMutationResult = NonNullable<Awaited<ReturnType<typeof loginUser>>>
+    export type LoginUserMutationBody = LoginRequest
+    export type LoginUserMutationError = ErrorResponse
 
     /**
  * @summary Аутентификация пользователя
  */
-export const usePostLogin = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postLogin>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postLogin>>,
-        TError,
-        {data: LoginRequest},
-        TContext
-      > => {
+export const useLoginUser = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginUser>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostLoginMutationOptions(options);
+      const mutationOptions = getLoginUserMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает список всех персон в системе
  * @summary Получить всех персон
  */
-export const getPersons = (
+export const getPersonAll = (
     
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2517,47 +2380,47 @@ export const getPersons = (
 
 
 
-export const getGetPersonsQueryKey = () => {
+export const getGetPersonAllQueryKey = () => {
     return [
-    `/persons`
+    'persons'
     ] as const;
     }
 
     
-export const getGetPersonsQueryOptions = <TData = Awaited<ReturnType<typeof getPersons>>, TError = ErrorResponse>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersons>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetPersonAllQueryOptions = <TData = Awaited<ReturnType<typeof getPersonAll>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPersonsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetPersonAllQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersons>>> = ({ signal }) => getPersons(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersonAll>>> = ({ signal }) => getPersonAll(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersons>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersonAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetPersonsQueryResult = NonNullable<Awaited<ReturnType<typeof getPersons>>>
-export type GetPersonsQueryError = ErrorResponse
+export type GetPersonAllQueryResult = NonNullable<Awaited<ReturnType<typeof getPersonAll>>>
+export type GetPersonAllQueryError = ErrorResponse
 
 
 /**
  * @summary Получить всех персон
  */
 
-export function useGetPersons<TData = Awaited<ReturnType<typeof getPersons>>, TError = ErrorResponse>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersons>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetPersonAll<TData = Awaited<ReturnType<typeof getPersonAll>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetPersonsQueryOptions(options)
+  const queryOptions = getGetPersonAllQueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2572,7 +2435,7 @@ export function useGetPersons<TData = Awaited<ReturnType<typeof getPersons>>, TE
  * Создает новую персону в системе
  * @summary Создать персону
  */
-export const postPersons = (
+export const createPerson = (
     createPersonRequest: CreatePersonRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2588,11 +2451,11 @@ export const postPersons = (
   
 
 
-export const getPostPersonsMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPersons>>, TError,{data: CreatePersonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postPersons>>, TError,{data: CreatePersonRequest}, TContext> => {
+export const getCreatePersonMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPerson>>, TError,{data: CreatePersonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPerson>>, TError,{data: CreatePersonRequest}, TContext> => {
 
-const mutationKey = ['postPersons'];
+const mutationKey = ['createPerson'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2602,10 +2465,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postPersons>>, {data: CreatePersonRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPerson>>, {data: CreatePersonRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postPersons(data,requestOptions)
+          return  createPerson(data,requestOptions)
         }
 
         
@@ -2613,33 +2476,28 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostPersonsMutationResult = NonNullable<Awaited<ReturnType<typeof postPersons>>>
-    export type PostPersonsMutationBody = CreatePersonRequest
-    export type PostPersonsMutationError = ErrorResponse
+    export type CreatePersonMutationResult = NonNullable<Awaited<ReturnType<typeof createPerson>>>
+    export type CreatePersonMutationBody = CreatePersonRequest
+    export type CreatePersonMutationError = ErrorResponse
 
     /**
  * @summary Создать персону
  */
-export const usePostPersons = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPersons>>, TError,{data: CreatePersonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postPersons>>,
-        TError,
-        {data: CreatePersonRequest},
-        TContext
-      > => {
+export const useCreatePerson = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPerson>>, TError,{data: CreatePersonRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostPersonsMutationOptions(options);
+      const mutationOptions = getCreatePersonMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Выполняет поиск людей по заданным критериям
  * @summary Поиск людей
  */
-export const postPersonsSearch = (
-    githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody,
+export const getPersonSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -2647,18 +2505,18 @@ export const postPersonsSearch = (
       return customInstance<PersonDTO[]>(
       {url: `/persons/search`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: githubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody, signal
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
     },
       options);
     }
   
 
 
-export const getPostPersonsSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPersonsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postPersonsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext> => {
+export const getGetPersonSearchMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['postPersonsSearch'];
+const mutationKey = ['getPersonSearch'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2668,10 +2526,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postPersonsSearch>>, {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getPersonSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  postPersonsSearch(data,requestOptions)
+          return  getPersonSearch(data,requestOptions)
         }
 
         
@@ -2679,32 +2537,27 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostPersonsSearchMutationResult = NonNullable<Awaited<ReturnType<typeof postPersonsSearch>>>
-    export type PostPersonsSearchMutationBody = GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody
-    export type PostPersonsSearchMutationError = ErrorResponse
+    export type GetPersonSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getPersonSearch>>>
+    export type GetPersonSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type GetPersonSearchMutationError = ErrorResponse
 
     /**
  * @summary Поиск людей
  */
-export const usePostPersonsSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPersonsSearch>>, TError,{data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postPersonsSearch>>,
-        TError,
-        {data: GithubComActuallyHelloBackendstoryInternalDtoSearchCriteriaBody},
-        TContext
-      > => {
+export const useGetPersonSearch = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostPersonsSearchMutationOptions(options);
+      const mutationOptions = getGetPersonSearchMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Возвращает персону по указанному логину пользователя
  * @summary Получить персону по логину пользователя
  */
-export const getPersonsUserUserLogin = (
+export const getPersonByUserLogin = (
     userLogin: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2719,47 +2572,47 @@ export const getPersonsUserUserLogin = (
 
 
 
-export const getGetPersonsUserUserLoginQueryKey = (userLogin?: string,) => {
+export const getGetPersonByUserLoginQueryKey = (userLogin?: string,) => {
     return [
-    `/persons/user/${userLogin}`
+    'persons','user',userLogin
     ] as const;
     }
 
     
-export const getGetPersonsUserUserLoginQueryOptions = <TData = Awaited<ReturnType<typeof getPersonsUserUserLogin>>, TError = ErrorResponse>(userLogin: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersonsUserUserLogin>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetPersonByUserLoginQueryOptions = <TData = Awaited<ReturnType<typeof getPersonByUserLogin>>, TError = ErrorResponse>(userLogin: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonByUserLogin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPersonsUserUserLoginQueryKey(userLogin);
+  const queryKey =  queryOptions?.queryKey ?? getGetPersonByUserLoginQueryKey(userLogin);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersonsUserUserLogin>>> = ({ signal }) => getPersonsUserUserLogin(userLogin, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersonByUserLogin>>> = ({ signal }) => getPersonByUserLogin(userLogin, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(userLogin), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersonsUserUserLogin>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(userLogin), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersonByUserLogin>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetPersonsUserUserLoginQueryResult = NonNullable<Awaited<ReturnType<typeof getPersonsUserUserLogin>>>
-export type GetPersonsUserUserLoginQueryError = ErrorResponse
+export type GetPersonByUserLoginQueryResult = NonNullable<Awaited<ReturnType<typeof getPersonByUserLogin>>>
+export type GetPersonByUserLoginQueryError = ErrorResponse
 
 
 /**
  * @summary Получить персону по логину пользователя
  */
 
-export function useGetPersonsUserUserLogin<TData = Awaited<ReturnType<typeof getPersonsUserUserLogin>>, TError = ErrorResponse>(
- userLogin: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersonsUserUserLogin>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetPersonByUserLogin<TData = Awaited<ReturnType<typeof getPersonByUserLogin>>, TError = ErrorResponse>(
+ userLogin: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonByUserLogin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetPersonsUserUserLoginQueryOptions(userLogin,options)
+  const queryOptions = getGetPersonByUserLoginQueryOptions(userLogin,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2774,7 +2627,7 @@ export function useGetPersonsUserUserLogin<TData = Awaited<ReturnType<typeof get
  * Возвращает персону по указанному идентификатору
  * @summary Получить персону по ID
  */
-export const getPersonsId = (
+export const getPersonById = (
     id: number,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2789,47 +2642,47 @@ export const getPersonsId = (
 
 
 
-export const getGetPersonsIdQueryKey = (id?: number,) => {
+export const getGetPersonByIdQueryKey = (id?: number,) => {
     return [
-    `/persons/${id}`
+    'persons',id
     ] as const;
     }
 
     
-export const getGetPersonsIdQueryOptions = <TData = Awaited<ReturnType<typeof getPersonsId>>, TError = ErrorResponse>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersonsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
+export const getGetPersonByIdQueryOptions = <TData = Awaited<ReturnType<typeof getPersonById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPersonsIdQueryKey(id);
+  const queryKey =  queryOptions?.queryKey ?? getGetPersonByIdQueryKey(id);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersonsId>>> = ({ signal }) => getPersonsId(id, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPersonById>>> = ({ signal }) => getPersonById(id, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersonsId>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPersonById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetPersonsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPersonsId>>>
-export type GetPersonsIdQueryError = ErrorResponse
+export type GetPersonByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPersonById>>>
+export type GetPersonByIdQueryError = ErrorResponse
 
 
 /**
  * @summary Получить персону по ID
  */
 
-export function useGetPersonsId<TData = Awaited<ReturnType<typeof getPersonsId>>, TError = ErrorResponse>(
- id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPersonsId>>, TError, TData>, request?: SecondParameter<typeof customInstance>}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useGetPersonById<TData = Awaited<ReturnType<typeof getPersonById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPersonById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetPersonsIdQueryOptions(id,options)
+  const queryOptions = getGetPersonByIdQueryOptions(id,options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -2844,9 +2697,9 @@ export function useGetPersonsId<TData = Awaited<ReturnType<typeof getPersonsId>>
  * Удаляет персону по указанному идентификатору. Поддерживает мягкое удаление (soft delete)
  * @summary Удалить персону
  */
-export const deletePersonsId = (
+export const deletePerson = (
     id: number,
-    params?: DeletePersonsIdParams,
+    params?: DeletePersonParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
       
@@ -2859,11 +2712,11 @@ export const deletePersonsId = (
   
 
 
-export const getDeletePersonsIdMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonsId>>, TError,{id: number;params?: DeletePersonsIdParams}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deletePersonsId>>, TError,{id: number;params?: DeletePersonsIdParams}, TContext> => {
+export const getDeletePersonMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePerson>>, TError,{id: number;params?: DeletePersonParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePerson>>, TError,{id: number;params?: DeletePersonParams}, TContext> => {
 
-const mutationKey = ['deletePersonsId'];
+const mutationKey = ['deletePerson'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2873,10 +2726,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePersonsId>>, {id: number;params?: DeletePersonsIdParams}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePerson>>, {id: number;params?: DeletePersonParams}> = (props) => {
           const {id,params} = props ?? {};
 
-          return  deletePersonsId(id,params,requestOptions)
+          return  deletePerson(id,params,requestOptions)
         }
 
         
@@ -2884,32 +2737,861 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type DeletePersonsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deletePersonsId>>>
+    export type DeletePersonMutationResult = NonNullable<Awaited<ReturnType<typeof deletePerson>>>
     
-    export type DeletePersonsIdMutationError = ErrorResponse
+    export type DeletePersonMutationError = ErrorResponse
 
     /**
  * @summary Удалить персону
  */
-export const useDeletePersonsId = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonsId>>, TError,{id: number;params?: DeletePersonsIdParams}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof deletePersonsId>>,
-        TError,
-        {id: number;params?: DeletePersonsIdParams},
-        TContext
-      > => {
+export const useDeletePerson = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePerson>>, TError,{id: number;params?: DeletePersonParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getDeletePersonsIdMutationOptions(options);
+      const mutationOptions = getDeletePersonMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает все изображения для указанного товара. Для доступа требуется аутентификация.
+ * @summary Получить изображения товара
+ */
+export const getProductMediaByProductId = (
+    productId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductMediaDTO[]>(
+      {url: `/product-media/product/${productId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductMediaByProductIdQueryKey = (productId?: number,) => {
+    return [
+    'product-media','product',productId
+    ] as const;
+    }
+
+    
+export const getGetProductMediaByProductIdQueryOptions = <TData = Awaited<ReturnType<typeof getProductMediaByProductId>>, TError = ErrorResponse>(productId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductMediaByProductId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductMediaByProductIdQueryKey(productId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductMediaByProductId>>> = ({ signal }) => getProductMediaByProductId(productId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductMediaByProductId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductMediaByProductIdQueryResult = NonNullable<Awaited<ReturnType<typeof getProductMediaByProductId>>>
+export type GetProductMediaByProductIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить изображения товара
+ */
+
+export function useGetProductMediaByProductId<TData = Awaited<ReturnType<typeof getProductMediaByProductId>>, TError = ErrorResponse>(
+ productId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductMediaByProductId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductMediaByProductIdQueryOptions(productId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Загружает изображение для указанного товара. Поддерживаемые форматы: JPEG, PNG, GIF. Максимальный размер файла: 10MB.
+ * @summary Загрузить изображение товара
+ */
+export const uploadProductMediaImage = (
+    uploadProductMediaImageBody: UploadProductMediaImageBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+formData.append(`product_id`, uploadProductMediaImageBody.product_id.toString())
+formData.append(`file`, uploadProductMediaImageBody.file)
+
+      return customInstance<ProductMediaDTO>(
+      {url: `/product-media/upload`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getUploadProductMediaImageMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadProductMediaImage>>, TError,{data: UploadProductMediaImageBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof uploadProductMediaImage>>, TError,{data: UploadProductMediaImageBody}, TContext> => {
+
+const mutationKey = ['uploadProductMediaImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadProductMediaImage>>, {data: UploadProductMediaImageBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  uploadProductMediaImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UploadProductMediaImageMutationResult = NonNullable<Awaited<ReturnType<typeof uploadProductMediaImage>>>
+    export type UploadProductMediaImageMutationBody = UploadProductMediaImageBody
+    export type UploadProductMediaImageMutationError = ErrorResponse
+
+    /**
+ * @summary Загрузить изображение товара
+ */
+export const useUploadProductMediaImage = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadProductMediaImage>>, TError,{data: UploadProductMediaImageBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getUploadProductMediaImageMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Удаляет изображение товара по ID. Удаляет как запись из БД, так и файл с диска.
+ * @summary Удалить изображение товара
+ */
+export const deleteProductMedia = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/product-media/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteProductMediaMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProductMedia>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteProductMedia>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteProductMedia'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProductMedia>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteProductMedia(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteProductMediaMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProductMedia>>>
+    
+    export type DeleteProductMediaMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить изображение товара
+ */
+export const useDeleteProductMedia = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProductMedia>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getDeleteProductMediaMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает список всех продуктов в системе
+ * @summary Получить все продукты
+ */
+export const getProductAll = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/products`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductAllQueryKey = () => {
+    return [
+    'products'
+    ] as const;
+    }
+
+    
+export const getGetProductAllQueryOptions = <TData = Awaited<ReturnType<typeof getProductAll>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductAllQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductAll>>> = ({ signal }) => getProductAll(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductAllQueryResult = NonNullable<Awaited<ReturnType<typeof getProductAll>>>
+export type GetProductAllQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить все продукты
+ */
+
+export function useGetProductAll<TData = Awaited<ReturnType<typeof getProductAll>>, TError = ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductAll>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductAllQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Создает новый продукт в системе
+ * @summary Создать продукт
+ */
+export const createProduct = (
+    productCreateRequest: ProductCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/products`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: productCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateProductMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductCreateRequest}, TContext> => {
+
+const mutationKey = ['createProduct'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createProduct>>, {data: ProductCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createProduct(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateProductMutationResult = NonNullable<Awaited<ReturnType<typeof createProduct>>>
+    export type CreateProductMutationBody = ProductCreateRequest
+    export type CreateProductMutationError = ErrorResponse
+
+    /**
+ * @summary Создать продукт
+ */
+export const useCreateProduct = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createProduct>>, TError,{data: ProductCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateProductMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает продукты по указанной категории
+ * @summary Получить продукты по категории
+ */
+export const getProductByCategoryId = (
+    categoryId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/products/category/${categoryId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductByCategoryIdQueryKey = (categoryId?: number,) => {
+    return [
+    'products','category',categoryId
+    ] as const;
+    }
+
+    
+export const getGetProductByCategoryIdQueryOptions = <TData = Awaited<ReturnType<typeof getProductByCategoryId>>, TError = ErrorResponse>(categoryId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductByCategoryId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductByCategoryIdQueryKey(categoryId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductByCategoryId>>> = ({ signal }) => getProductByCategoryId(categoryId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(categoryId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductByCategoryId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductByCategoryIdQueryResult = NonNullable<Awaited<ReturnType<typeof getProductByCategoryId>>>
+export type GetProductByCategoryIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукты по категории
+ */
+
+export function useGetProductByCategoryId<TData = Awaited<ReturnType<typeof getProductByCategoryId>>, TError = ErrorResponse>(
+ categoryId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductByCategoryId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductByCategoryIdQueryOptions(categoryId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает продукт по указанному коду
+ * @summary Получить продукт по коду
+ */
+export const getProductByCode = (
+    code: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/products/code/${code}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductByCodeQueryKey = (code?: string,) => {
+    return [
+    'products','code',code
+    ] as const;
+    }
+
+    
+export const getGetProductByCodeQueryOptions = <TData = Awaited<ReturnType<typeof getProductByCode>>, TError = ErrorResponse>(code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductByCodeQueryKey(code);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductByCode>>> = ({ signal }) => getProductByCode(code, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(code), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductByCode>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductByCodeQueryResult = NonNullable<Awaited<ReturnType<typeof getProductByCode>>>
+export type GetProductByCodeQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукт по коду
+ */
+
+export function useGetProductByCode<TData = Awaited<ReturnType<typeof getProductByCode>>, TError = ErrorResponse>(
+ code: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductByCode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductByCodeQueryOptions(code,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Выполняет поиск продуктов по заданным критериям
+ * @summary Поиск продуктов
+ */
+export const getProductSearch = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO[]>(
+      {url: `/products/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductSearchInfiniteQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
+    return [
+    'infinite', 'products','search', githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    ] as const;
+    }
+
+export const getGetProductSearchQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
+    return [
+    'products','search', githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    ] as const;
+    }
+
+    
+export const getGetProductSearchInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getProductSearch>>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductSearchInfiniteQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductSearch>>> = ({ signal, pageParam }) => getProductSearch({ ...githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, offset: pageParam as number }, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductSearchInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getProductSearch>>>
+export type GetProductSearchInfiniteQueryError = ErrorResponse
+
+
+/**
+ * @summary Поиск продуктов
+ */
+
+export function useGetProductSearchInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProductSearch>>>, TError = ErrorResponse>(
+ githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductSearchInfiniteQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
+
+  const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getGetProductSearchQueryOptions = <TData = Awaited<ReturnType<typeof getProductSearch>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductSearchQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductSearch>>> = ({ signal }) => getProductSearch(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductSearchQueryResult = NonNullable<Awaited<ReturnType<typeof getProductSearch>>>
+export type GetProductSearchQueryError = ErrorResponse
+
+
+/**
+ * @summary Поиск продуктов
+ */
+
+export function useGetProductSearch<TData = Awaited<ReturnType<typeof getProductSearch>>, TError = ErrorResponse>(
+ githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductSearchQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает продукт по указанному идентификатору
+ * @summary Получить продукт по ID
+ */
+export const getProductById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/products/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetProductByIdQueryKey = (id?: number,) => {
+    return [
+    'products',id
+    ] as const;
+    }
+
+    
+export const getGetProductByIdQueryOptions = <TData = Awaited<ReturnType<typeof getProductById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProductByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductById>>> = ({ signal }) => getProductById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetProductByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getProductById>>>
+export type GetProductByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить продукт по ID
+ */
+
+export function useGetProductById<TData = Awaited<ReturnType<typeof getProductById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetProductByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет продукт по указанному идентификатору
+ * @summary Удалить продукт
+ */
+export const deleteProduct = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/products/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteProductMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteProduct'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProduct>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteProduct(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteProductMutationResult = NonNullable<Awaited<ReturnType<typeof deleteProduct>>>
+    
+    export type DeleteProductMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить продукт
+ */
+export const useDeleteProduct = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getDeleteProductMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Оформляет покупку всех товаров в указанной корзине
+ * @summary Оформить покупку корзины
+ */
+export const purchaseCart = (
+    purchaseRequest: PurchaseRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/purchases`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: purchaseRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getPurchaseCartMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext> => {
+
+const mutationKey = ['purchaseCart'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseCart>>, {data: PurchaseRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  purchaseCart(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PurchaseCartMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseCart>>>
+    export type PurchaseCartMutationBody = PurchaseRequest
+    export type PurchaseCartMutationError = ErrorResponse
+
+    /**
+ * @summary Оформить покупку корзины
+ */
+export const usePurchaseCart = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getPurchaseCartMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Добавляет указанное количество товара в корзину пользователя
+ * @summary Добавить товар в корзину
+ */
+export const addToCart = (
+    addToCartRequest: AddToCartRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/purchases/cart`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: addToCartRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getAddToCartMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext> => {
+
+const mutationKey = ['addToCart'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addToCart>>, {data: AddToCartRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  addToCart(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddToCartMutationResult = NonNullable<Awaited<ReturnType<typeof addToCart>>>
+    export type AddToCartMutationBody = AddToCartRequest
+    export type AddToCartMutationError = ErrorResponse
+
+    /**
+ * @summary Добавить товар в корзину
+ */
+export const useAddToCart = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getAddToCartMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
     }
     
 /**
  * Создает нового пользователя и возвращает токен
  * @summary Регистрация пользователя
  */
-export const postRegister = (
+export const registerUser = (
     registerUserRequest: RegisterUserRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2925,11 +3607,11 @@ export const postRegister = (
   
 
 
-export const getPostRegisterMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: RegisterUserRequest}, TContext> => {
+export const getRegisterUserMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerUser>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof registerUser>>, TError,{data: RegisterUserRequest}, TContext> => {
 
-const mutationKey = ['postRegister'];
+const mutationKey = ['registerUser'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2939,10 +3621,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRegister>>, {data: RegisterUserRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof registerUser>>, {data: RegisterUserRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  postRegister(data,requestOptions)
+          return  registerUser(data,requestOptions)
         }
 
         
@@ -2950,24 +3632,19 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PostRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postRegister>>>
-    export type PostRegisterMutationBody = RegisterUserRequest
-    export type PostRegisterMutationError = ErrorResponse
+    export type RegisterUserMutationResult = NonNullable<Awaited<ReturnType<typeof registerUser>>>
+    export type RegisterUserMutationBody = RegisterUserRequest
+    export type RegisterUserMutationError = ErrorResponse
 
     /**
  * @summary Регистрация пользователя
  */
-export const usePostRegister = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRegister>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof postRegister>>,
-        TError,
-        {data: RegisterUserRequest},
-        TContext
-      > => {
+export const useRegisterUser = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerUser>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
 
-      const mutationOptions = getPostRegisterMutationOptions(options);
+      const mutationOptions = getRegisterUserMutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     
