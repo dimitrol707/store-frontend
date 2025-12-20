@@ -3,8 +3,9 @@ import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
 
 import { useItemsPerRow } from "./hooks/useItemsPerRow";
+import { SkeletonGrid } from "./SkeletonGrid";
 
-const ESTIMATE_SIZE = 200;
+const ESTIMATE_SIZE = 360;
 
 type InfiniteProps = {
   hasNextPage: boolean;
@@ -27,7 +28,7 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
   const {
     items,
     renderItem,
-    minItemWidth = 300,
+    minItemWidth = ESTIMATE_SIZE,
     itemPerRow,
     gap = 8,
     infiniteProps: {
@@ -47,11 +48,20 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
   });
 
   const resultItemPerRow = itemPerRow ?? calculatedItemsPerRow;
-  const rowCount = Math.max(1, Math.ceil(items.length / resultItemPerRow));
+  const rowCount = Math.ceil(items.length / resultItemPerRow);
 
+  const isEmpty = items.length === 0;
+  const isLastRowFull = !isEmpty && items.length % resultItemPerRow === 0;
+
+  const showLoaderRow =
+    !!renderSkeletonItem &&
+    (isLoading || isFetchingNextPage) &&
+    (isEmpty || isLastRowFull);
+
+  const totalCount = rowCount + (showLoaderRow ? 1 : 0);
   const rowVirtualizer = useWindowVirtualizer({
-    count: rowCount,
-    estimateSize: () => ESTIMATE_SIZE,
+    count: totalCount,
+    estimateSize: () => ESTIMATE_SIZE + gap,
     overscan: 10,
   });
 
@@ -59,13 +69,12 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
   const totalHeight = rowVirtualizer.getTotalSize();
 
   useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return;
-    if (!virtualRows.length) return;
+    if (!hasNextPage || isFetchingNextPage || !virtualRows.length) return;
 
-    const lastRow = virtualRows[virtualRows.length - 1];
+    const virtualLastRow = virtualRows[virtualRows.length - 1];
     const lastRowIndex = rowCount - 1;
 
-    if (lastRow.index >= lastRowIndex) {
+    if (virtualLastRow.index >= lastRowIndex) {
       fetchNextPage();
     }
   }, [virtualRows, rowCount, hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -80,53 +89,58 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
       }}
     >
       {virtualRows.map((virtualRow) => {
-        const rowIndex = virtualRow.index;
-        const startIndex = rowIndex * resultItemPerRow;
-        const endIndex = Math.min(startIndex + resultItemPerRow, items.length);
-        const rowItems = items.slice(startIndex, endIndex);
+        const isLoaderRow = showLoaderRow && virtualRow.index === rowCount;
 
         return (
           <RowContainer
             ref={rowVirtualizer.measureElement}
             key={virtualRow.key}
-            data-index={virtualRow.index}
             gap={gap}
-            sx={{
-              transform: `translateY(${virtualRow.start}px)`,
-            }}
+            sx={{ transform: `translateY(${virtualRow.start}px)` }}
           >
             <GridRow gap={gap} itemPerRow={resultItemPerRow}>
-              {rowItems.map((item, indexInRow) => {
-                const itemIndex = startIndex + indexInRow;
-                return <Box key={itemIndex}>{renderItem(item, itemIndex)}</Box>;
-              })}
-              {isFetchingNextPage &&
-                renderSkeletonItem &&
-                rowItems.length < resultItemPerRow &&
-                Array.from({
-                  length: resultItemPerRow - rowItems.length,
-                }).map((_, i) => {
-                  const key = `skeleton-${rowIndex}-${i}`;
-                  return <Box key={key}>{renderSkeletonItem(i)}</Box>;
-                })}
+              {isLoaderRow ? (
+                <SkeletonGrid
+                  rowKey={"loader"}
+                  length={resultItemPerRow}
+                  renderSkeletonItem={renderSkeletonItem}
+                />
+              ) : (
+                (() => {
+                  const rowIndex = virtualRow.index;
+                  const startIndex = rowIndex * resultItemPerRow;
+                  const endIndex = Math.min(
+                    startIndex + resultItemPerRow,
+                    items.length
+                  );
+                  const rowItems = items.slice(startIndex, endIndex);
+
+                  return (
+                    <>
+                      {rowItems.map((item, indexInRow) => {
+                        const itemIndex = startIndex + indexInRow;
+                        return (
+                          <Box key={itemIndex}>
+                            {renderItem(item, itemIndex)}
+                          </Box>
+                        );
+                      })}
+                      {isFetchingNextPage &&
+                        rowItems.length < resultItemPerRow && (
+                          <SkeletonGrid
+                            rowKey={`skeleton-${rowIndex}`}
+                            length={resultItemPerRow - rowItems.length}
+                            renderSkeletonItem={renderSkeletonItem}
+                          />
+                        )}
+                    </>
+                  );
+                })()
+              )}
             </GridRow>
           </RowContainer>
         );
       })}
-      {(isFetchingNextPage || isLoading) && renderSkeletonItem && (
-        <RowContainer
-          gap={gap}
-          sx={{
-            top: totalHeight,
-          }}
-        >
-          <GridRow gap={gap} itemPerRow={resultItemPerRow}>
-            {Array.from({ length: resultItemPerRow }).map((_, i) => (
-              <Box key={`skeleton-bottom-${i}`}>{renderSkeletonItem(i)}</Box>
-            ))}
-          </GridRow>
-        </RowContainer>
-      )}
     </Box>
   );
 }
