@@ -4,7 +4,7 @@ import { ProductsCards } from "@store-frontend/features-products";
 
 export default function MainPage() {
   return (
-    <Stack gap={1} sx={{ position: "relative", top: "64px" }}>
+    <Stack gap={1} flex="1 0 auto">
       <CategoryTabs />
       <ProductsCards />
     </Stack>

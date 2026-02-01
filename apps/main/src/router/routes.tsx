@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 
-import { LoginPage, MainPage } from "../pages";
+import { CartPage, LoginPage, MainPage } from "../pages";
 import { AppLayout } from "./layouts/AppLayout";
 import { AppRoute } from "./routes/AppRoute";
 
@@ -14,6 +14,10 @@ export const router = createBrowserRouter([
           {
             path: "/",
             element: <MainPage />,
+          },
+          {
+            path: "/cart",
+            element: <CartPage />,
           },
         ],
       },

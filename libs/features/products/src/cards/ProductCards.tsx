@@ -1,4 +1,4 @@
-import { Skeleton } from "@mui/material";
+import { Skeleton, Stack, Typography } from "@mui/material";
 import { useGetProductSearchInfinite } from "@store-frontend/shared-api";
 import { VirtualizedGrid } from "@store-frontend/shared-ui";
 import { useMemo } from "react";
@@ -7,6 +7,8 @@ import { useSearchParams } from "react-router";
 import { ProductCardItem } from "./ProductCardItem";
 
 const LIMIT = 50;
+const CARD_MIN_WIDTH = 200;
+const CARD_HEIGHT = 360;
 
 export function ProductsCards() {
   const [searchParams] = useSearchParams();
@@ -44,10 +46,19 @@ export function ProductsCards() {
     [data]
   );
 
+  if (!flatResult.length && !isLoading) {
+    return (
+      <Stack flex={1} alignItems={"center"} justifyContent={"center"}>
+        <Typography fontWeight={500}>Products not found</Typography>
+      </Stack>
+    );
+  }
+
   return (
     <VirtualizedGrid
       items={flatResult}
-      minItemWidth={200}
+      minItemWidth={CARD_MIN_WIDTH}
+      estimateSize={CARD_HEIGHT}
       renderItem={(item) => <ProductCardItem product={item} />}
       infiniteProps={{
         fetchNextPage,
@@ -55,7 +66,9 @@ export function ProductsCards() {
         isFetchingNextPage,
         isLoading,
       }}
-      renderSkeletonItem={() => <Skeleton sx={{ width: 1, height: "350px" }} />}
+      renderSkeletonItem={() => (
+        <Skeleton sx={{ width: 1, height: `${CARD_HEIGHT}px` }} />
+      )}
     />
   );
 }

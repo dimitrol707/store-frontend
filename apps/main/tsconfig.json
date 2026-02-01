@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/features/cart"
+    },
+    {
       "path": "../../libs/features/products"
     },
     {

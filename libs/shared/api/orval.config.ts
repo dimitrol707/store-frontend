@@ -1,11 +1,17 @@
+import { config as loadEnv } from "dotenv";
 import { defineConfig } from "orval";
+import path from "path";
 
 import { outputClient } from "./src/config/outputClient";
+
+loadEnv({ path: path.resolve(__dirname, "../../..", ".env") });
+
+const apiBaseUrl = process.env.VITE_API_URL || "http://localhost:8080";
 
 export default defineConfig({
   api: {
     input: {
-      target: "http://localhost:8080/swagger/doc.json",
+      target: `${apiBaseUrl}/swagger/doc.json`,
       override: {
         transformer: "./src/config/inputTransformer.ts",
       },

@@ -58,7 +58,7 @@ export default defineConfig([
             },
             {
               sourceTag: "scope:features",
-              onlyDependOnLibsWithTags: ["scope:shared"],
+              onlyDependOnLibsWithTags: ["scope:features", "scope:shared"],
             },
           ],
         },

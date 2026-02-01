@@ -2,6 +2,7 @@ import _ from "lodash";
 
 export enum LocalStorageKey {
   JWT = "jwt",
+  CART = "cart",
 }
 
 export function getLocalStorageValue<T>(key: LocalStorageKey): T | null {

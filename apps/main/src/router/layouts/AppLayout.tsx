@@ -1,4 +1,5 @@
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Stack, styled } from "@mui/material";
+import { CircularLoader } from "@store-frontend/shared-ui";
 import { Suspense } from "react";
 import { Outlet } from "react-router";
 
@@ -6,25 +7,25 @@ import { Navbar } from "../../components";
 
 export function AppLayout() {
   return (
-    <Stack width={1} height={1}>
+    <Stack minWidth="100vw" minHeight="100vh">
       <Navbar />
       <Suspense
         fallback={
-          <Stack
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              flex: "1 0 auto",
-            }}
-          >
-            <CircularProgress />
-          </Stack>
+          <StyledAppContainer>
+            <CircularLoader />
+          </StyledAppContainer>
         }
       >
-        <Box padding={1}>
+        <StyledAppContainer>
           <Outlet />
-        </Box>
+        </StyledAppContainer>
       </Suspense>
     </Stack>
   );
 }
+
+const StyledAppContainer = styled(Stack)(({ theme }) => ({
+  padding: theme.vars?.spacing,
+  paddingTop: `calc(var(--app-navbar-height) + ${theme.vars?.spacing})`,
+  flex: "1 0 auto",
+}));

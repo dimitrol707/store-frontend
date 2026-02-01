@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/features/products"
+    },
+    {
+      "path": "./libs/features/cart"
     }
   ]
 }

@@ -1,9 +1,13 @@
-import { Box, Skeleton, Stack, Typography } from "@mui/material";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
+import { Box, IconButton, Skeleton, Stack, Typography } from "@mui/material";
+import { useCartContext } from "@store-frontend/features-cart";
 import {
   ProductDTO,
   useGetProductMediaByProductId,
 } from "@store-frontend/shared-api";
-import { Button } from "@store-frontend/shared-ui";
+import { Button, noProductImage } from "@store-frontend/shared-ui";
+import { buildMediaUrl } from "@store-frontend/shared-utils";
 import { useState } from "react";
 
 interface ProductCardItemProps {
@@ -13,10 +17,14 @@ interface ProductCardItemProps {
 export function ProductCardItem({ product }: Readonly<ProductCardItemProps>) {
   const [currentProductMediaIndex, setCurrentProductMediaIndex] =
     useState<number>(0);
-  const { data: productMediaData } = useGetProductMediaByProductId(product.id);
+  const { data: productMediaData, isLoading: isLoadingMedia } =
+    useGetProductMediaByProductId(product.id);
+  const { addToCart, items, removeFromCart } = useCartContext();
   const currentProductMediaLink = productMediaData?.length
-    ? productMediaData[currentProductMediaIndex]?.link
-    : undefined;
+    ? buildMediaUrl(productMediaData[currentProductMediaIndex]?.link)
+    : noProductImage;
+
+  const productInCart = items.find((item) => item.productId === product.id);
 
   return (
     <Stack
@@ -24,11 +32,6 @@ export function ProductCardItem({ product }: Readonly<ProductCardItemProps>) {
         borderRadius: 2,
         padding: 1,
         height: 1,
-        "&:hover": {
-          backgroundColor: "#fff",
-          boxShadow:
-            "0 8px 10px 0 rgba(195, 195, 195, 0.2), 0 -11px 30px 0 rgba(195, 195, 195, 0.12), 0 16px 24px 0 rgba(195, 195, 195, 0.14)",
-        },
       }}
     >
       <Box
@@ -38,17 +41,18 @@ export function ProductCardItem({ product }: Readonly<ProductCardItemProps>) {
           height: "200px",
         }}
       >
-        {!currentProductMediaLink && <Skeleton sx={{ width: 1, height: 1 }} />}
-        {currentProductMediaLink ? (
+        {isLoadingMedia ? (
+          <Skeleton sx={{ width: 1, height: 1 }} />
+        ) : (
           <img
-            src={"http://localhost:8080" + currentProductMediaLink}
+            src={currentProductMediaLink}
             style={{
               width: "100%",
               height: "100%",
               objectFit: "contain",
             }}
           />
-        ) : null}
+        )}
         <Box
           sx={{
             position: "absolute",
@@ -97,7 +101,26 @@ export function ProductCardItem({ product }: Readonly<ProductCardItemProps>) {
       <Typography variant="h5" color="primary">
         {`${product.price} RUB`}
       </Typography>
-      <Button variant="contained">{"In Cart"}</Button>
+      {productInCart ? (
+        <Stack
+          direction="row"
+          gap={1}
+          justifyContent={"space-between"}
+          alignItems="center"
+        >
+          <IconButton>
+            <RemoveCircleRoundedIcon
+              onClick={() => removeFromCart(product.id)}
+            />
+          </IconButton>
+          <Typography>{productInCart.quantity}</Typography>
+          <IconButton>
+            <AddCircleRoundedIcon onClick={() => addToCart(product.id)} />
+          </IconButton>
+        </Stack>
+      ) : (
+        <Button onClick={() => addToCart(product.id)}>{"In Cart"}</Button>
+      )}
     </Stack>
   );
 }

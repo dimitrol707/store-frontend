@@ -36,7 +36,7 @@ export function CategoryTabs() {
           <Chip
             key={category.id}
             label={category.label}
-            variant="outlined"
+            variant="filled"
             onClick={() => {
               setSearchParams((prev) => {
                 const newSearchParams = new URLSearchParams(prev);

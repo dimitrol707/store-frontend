@@ -17,9 +17,6 @@
     },
     {
       "path": "../../shared/api/tsconfig.lib.json"
-    },
-    {
-      "path": "../cart/tsconfig.lib.json"
     }
   ]
 }

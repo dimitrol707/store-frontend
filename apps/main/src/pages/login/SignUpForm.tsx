@@ -1,11 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 import { Button, TextFieldForm } from "@store-frontend/shared-ui";
 
-import { useAuth } from "../../providers/AuthProvider";
+import { useAuthContext } from "../../providers/AuthProvider";
 import { useSignUpForm } from "./useSignUpForm";
 
 export default function SignUpForm() {
-  const { isLoading } = useAuth();
+  const { isLoading } = useAuthContext();
   const { onSubmit, control, formState, isSubmitting } = useSignUpForm();
   const isLoadingForm = isLoading || isSubmitting;
   return (

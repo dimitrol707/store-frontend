@@ -1,3 +1,4 @@
+import { CartProvider } from "@store-frontend/features-cart";
 import { Outlet } from "react-router";
 
 import { AuthProvider } from "../../providers/AuthProvider";
@@ -5,7 +6,9 @@ import { AuthProvider } from "../../providers/AuthProvider";
 export function AppRoute() {
   return (
     <AuthProvider>
-      <Outlet />
+      <CartProvider>
+        <Outlet />
+      </CartProvider>
     </AuthProvider>
   );
 }

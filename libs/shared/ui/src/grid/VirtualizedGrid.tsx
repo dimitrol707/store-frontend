@@ -1,11 +1,12 @@
-import { Box, styled } from "@mui/material";
+import { Box, Stack, styled } from "@mui/material";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
 
 import { useItemsPerRow } from "./hooks/useItemsPerRow";
 import { SkeletonGrid } from "./SkeletonGrid";
 
-const ESTIMATE_SIZE = 360;
+const DEFAULT_ESTIMATE_SIZE = 100;
+const DEFAULT_MIN_ITEM_WIDTH = 100;
 
 type InfiniteProps = {
   hasNextPage: boolean;
@@ -16,6 +17,7 @@ type InfiniteProps = {
 
 type VirtualizedGridProps<T> = {
   items: T[];
+  estimateSize: number;
   minItemWidth?: number;
   gap?: number;
   itemPerRow?: number;
@@ -28,7 +30,8 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
   const {
     items,
     renderItem,
-    minItemWidth = ESTIMATE_SIZE,
+    minItemWidth = DEFAULT_MIN_ITEM_WIDTH,
+    estimateSize = DEFAULT_ESTIMATE_SIZE,
     itemPerRow,
     gap = 8,
     infiniteProps: {
@@ -61,7 +64,7 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
   const totalCount = rowCount + (showLoaderRow ? 1 : 0);
   const rowVirtualizer = useWindowVirtualizer({
     count: totalCount,
-    estimateSize: () => ESTIMATE_SIZE + gap,
+    estimateSize: () => estimateSize + gap,
     overscan: 10,
   });
 
@@ -95,6 +98,7 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
           <RowContainer
             ref={rowVirtualizer.measureElement}
             key={virtualRow.key}
+            data-index={virtualRow.index}
             gap={gap}
             sx={{ transform: `translateY(${virtualRow.start}px)` }}
           >
@@ -111,7 +115,7 @@ export function VirtualizedGrid<T>(props: VirtualizedGridProps<T>) {
                   const startIndex = rowIndex * resultItemPerRow;
                   const endIndex = Math.min(
                     startIndex + resultItemPerRow,
-                    items.length
+                    items.length,
                   );
                   const rowItems = items.slice(startIndex, endIndex);
 

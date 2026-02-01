@@ -6,9 +6,9 @@ import {
   TabsOwnProps,
 } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 
-import { useAuth } from "../../providers/AuthProvider";
+import { useAuthContext } from "../../providers/AuthProvider";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 
@@ -18,8 +18,7 @@ enum LoginTab {
 }
 
 export default function LoginPage() {
-  const { user, isLoading } = useAuth();
-  const navigate = useNavigate();
+  const { user, isLoading } = useAuthContext();
   const [tabValue, setTabValue] = useState<LoginTab>(LoginTab.SignIn);
 
   const handleChangeTab: TabsOwnProps["onChange"] = (e, value) => {
@@ -35,7 +34,7 @@ export default function LoginPage() {
   }
 
   if (user) {
-    navigate("/");
+    return <Navigate to="/" replace />;
   }
 
   return (
