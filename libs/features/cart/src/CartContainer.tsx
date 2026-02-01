@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Typography } from "@mui/material";
-import { useGetProductSearchInfinite } from "@store-frontend/shared-api";
+import { useSearchProductInfinite } from "@store-frontend/shared-api";
 import {
   Button,
   CircularLoader,
@@ -17,7 +17,7 @@ export function CartContainer() {
   const { items } = useCartContext();
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
-    useGetProductSearchInfinite(
+    useSearchProductInfinite(
       {
         limit: LIMIT,
         search_conditions: [

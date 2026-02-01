@@ -5,6 +5,15 @@
  * API для управления перечислениями, пользователями и аутентификацией
  * OpenAPI spec version: 1.0
  */
+export interface EnumValueDTO {
+  code?: string;
+  created_at?: string;
+  enum_id?: number;
+  id?: number;
+  label?: string;
+  updated_at?: string;
+}
+
 export interface ErrorResponse {
   code?: string;
   message?: string;
@@ -46,6 +55,18 @@ export interface SearchCriteria {
    */
   order_by?: string;
   search_conditions?: SearchCondition[];
+}
+
+export type ValidationErrorResponseDetails = {[key: string]: string};
+
+export interface ValidationErrorResponse {
+  code?: string;
+  details?: ValidationErrorResponseDetails;
+  message?: string;
+  method?: string;
+  path?: string;
+  status?: number;
+  timestamp?: string;
 }
 
 export interface Jwt {
@@ -102,8 +123,8 @@ export interface CartCreateRequest {
 
 export interface CartDTO {
   created_at?: string;
-  id: number;
-  person_id: number;
+  id?: number;
+  person_id?: number;
   updated_at?: string;
 }
 
@@ -117,12 +138,19 @@ export interface CartItemCreateRequest {
 }
 
 export interface CartItemDTO {
-  cart_id: number;
+  cart_id?: number;
   created_at?: string;
-  id: number;
-  product_id: number;
-  quantity: number;
+  id?: number;
+  product_id?: number;
+  quantity?: number;
   updated_at?: string;
+}
+
+export interface CartItemUpdateRequest {
+  /** @minimum 1 */
+  cart_item_id: number;
+  /** @minimum 1 */
+  quantity: number;
 }
 
 export interface CategoryCreateRequest {
@@ -141,11 +169,11 @@ export interface CategoryCreateRequest {
 }
 
 export interface CategoryDTO {
-  category_id: number;
-  code: string;
+  category_id?: number;
+  code?: string;
   created_at?: string;
-  id: number;
-  label: string;
+  id?: number;
+  label?: string;
   updated_at?: string;
 }
 
@@ -163,10 +191,10 @@ export interface EnumCreateRequest {
 }
 
 export interface EnumDTO {
-  code: string;
+  code?: string;
   created_at?: string;
-  id: number;
-  label: string;
+  id?: number;
+  label?: string;
   updated_at?: string;
 }
 
@@ -184,12 +212,35 @@ export interface EnumValueCreateRequest {
   label: string;
 }
 
-export interface EnumValueDTO {
-  code: string;
+export interface OrderCreateRequest {
+  cart_item_ids: number[];
+  /** @minimum 1 */
+  client_id: number;
+}
+
+export interface OrderDTO {
+  client_id?: number;
   created_at?: string;
-  enum_id: number;
-  id: number;
-  label: string;
+  details?: string;
+  id?: number;
+  manager_id?: number;
+  status_dto?: EnumValueDTO;
+  updated_at?: string;
+}
+
+export interface OrderItemCreateRequest {
+  /** @minimum 1 */
+  cart_item_id: number;
+  /** @minimum 1 */
+  order_id: number;
+}
+
+export interface OrderItemDTO {
+  cart_item_id?: number;
+  created_at?: string;
+  id?: number;
+  order_id?: number;
+  status_dto?: EnumValueDTO;
   updated_at?: string;
 }
 
@@ -211,12 +262,12 @@ export interface CreatePersonRequest {
 export interface PersonDTO {
   created_at?: string;
   deleted_at?: string;
-  firstname: string;
-  id: number;
-  lastname: string;
-  phone: string;
+  firstname?: string;
+  id?: number;
+  lastname?: string;
+  phone?: string;
   updated_at?: string;
-  user_login: string;
+  user_login?: string;
 }
 
 export interface ProductCreateRequest {
@@ -227,6 +278,7 @@ export interface ProductCreateRequest {
    * @maxLength 50
    */
   code: string;
+  is_visible: boolean;
   /**
    * @minLength 1
    * @maxLength 255
@@ -244,20 +296,39 @@ export interface ProductCreateRequest {
    * @maxLength 255
    */
   sku: string;
-  status_id: number;
 }
 
 export interface ProductDTO {
-  category_id: number;
-  code: string;
+  category_id?: number;
+  code?: string;
   created_at?: string;
-  id: number;
-  label: string;
-  price: string;
-  quantity: number;
-  sku: string;
-  status_id: number;
+  delted_at?: string;
+  id?: number;
+  is_visible?: boolean;
+  label?: string;
+  price?: string;
+  quantity?: number;
+  sku?: string;
+  status_dto?: EnumValueDTO;
   updated_at?: string;
+}
+
+export interface ProductPriceChangeRequest {
+  id: number;
+  /**
+   * @minLength 1
+   * @maxLength 30
+   */
+  price: string;
+}
+
+export interface ProductStatusChangeRequest {
+  id: number;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  status_code: string;
 }
 
 /**
@@ -265,33 +336,16 @@ export interface ProductDTO {
  */
 export interface ProductMediaDTO {
   created_at?: string;
-  id: number;
+  id?: number;
   link?: string;
-  product_id: number;
+  product_id?: number;
   updated_at?: string;
-}
-
-export interface AddToCartRequest {
-  /** @minimum 1 */
-  product_id: number;
-  /** @minimum 1 */
-  quantity: number;
-}
-
-export interface PurchaseRequest {
-  /** @minimum 1 */
-  cart_id: number;
 }
 
 /**
  * Критерии поиска
  */
 export type GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody = SearchCriteria;
-
-/**
- * Данные для создания элемента корзины
- */
-export type PkgBackendstoryCartItemCartItemCreateRequestBody = CartItemCreateRequest;
 
 export type DeletePersonParams = {
 /**
@@ -308,5 +362,12 @@ export type UploadProductMediaImageBody = {
   product_id: number;
   /** Изображение товара */
   file: Blob;
+};
+
+export type DeleteProductParams = {
+/**
+ * Флаг мягкого удаления (true/false)
+ */
+soft?: boolean;
 };
 

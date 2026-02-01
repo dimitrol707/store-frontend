@@ -25,33 +25,38 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  AddToCartRequest,
   CartCreateRequest,
   CartDTO,
   CartItemDTO,
+  CartItemUpdateRequest,
   CategoryCreateRequest,
   CategoryDTO,
   CreatePersonRequest,
   DeletePersonParams,
+  DeleteProductParams,
   EnumCreateRequest,
   EnumDTO,
-  EnumValueCreateRequest,
   EnumValueDTO,
   ErrorResponse,
   GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
   LoginRequest,
   LoginResponse,
+  OrderCreateRequest,
+  OrderDTO,
+  OrderItemCreateRequest,
+  OrderItemDTO,
   PersonDTO,
-  PkgBackendstoryCartItemCartItemCreateRequestBody,
   ProductCreateRequest,
   ProductDTO,
   ProductMediaDTO,
-  PurchaseRequest,
+  ProductPriceChangeRequest,
+  ProductStatusChangeRequest,
   RegisterUserRequest,
   TokenRequest,
   TokenUserInfo,
   UploadProductMediaImageBody,
-  UserDTO
+  UserDTO,
+  ValidationErrorResponse
 } from './api.schemas';
 
 import { customInstance } from '../config/axios';
@@ -477,79 +482,16 @@ export function useGetUserRoles<TData = Awaited<ReturnType<typeof getUserRoles>>
 
 
 /**
- * Создает новый элемент корзины
- * @summary Создать элемент корзины
+ * Удалить элемент корзины
+ * @summary Удалить элемент корзины
  */
-export const updateCartItem = (
-    pkgBackendstoryCartItemCartItemCreateRequestBody: PkgBackendstoryCartItemCartItemCreateRequestBody,
+export const createCartItem = (
+    
  options?: SecondParameter<typeof customInstance>,) => {
       
       
-      return customInstance<CartItemDTO>(
-      {url: `/cart-items`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: pkgBackendstoryCartItemCartItemCreateRequestBody
-    },
-      options);
-    }
-  
-
-
-export const getUpdateCartItemMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext> => {
-
-const mutationKey = ['updateCartItem'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCartItem>>, {data: PkgBackendstoryCartItemCartItemCreateRequestBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  updateCartItem(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof updateCartItem>>>
-    export type UpdateCartItemMutationBody = PkgBackendstoryCartItemCartItemCreateRequestBody
-    export type UpdateCartItemMutationError = ErrorResponse
-
-    /**
- * @summary Создать элемент корзины
- */
-export const useUpdateCartItem = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient) => {
-
-      const mutationOptions = getUpdateCartItemMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
- * Создает новый элемент корзины
- * @summary Создать элемент корзины
- */
-export const createCartItem = (
-    pkgBackendstoryCartItemCartItemCreateRequestBody: PkgBackendstoryCartItemCartItemCreateRequestBody,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<CartItemDTO>(
-      {url: `/cart-items`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: pkgBackendstoryCartItemCartItemCreateRequestBody, signal
+      return customInstance<void>(
+      {url: `/cart-items`, method: 'DELETE'
     },
       options);
     }
@@ -557,8 +499,8 @@ export const createCartItem = (
 
 
 export const getCreateCartItemMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,void, TContext> => {
 
 const mutationKey = ['createCartItem'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -570,10 +512,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCartItem>>, {data: PkgBackendstoryCartItemCartItemCreateRequestBody}> = (props) => {
-          const {data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCartItem>>, void> = () => {
+          
 
-          return  createCartItem(data,requestOptions)
+          return  createCartItem(requestOptions)
         }
 
         
@@ -582,17 +524,77 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof createCartItem>>>
-    export type CreateCartItemMutationBody = PkgBackendstoryCartItemCartItemCreateRequestBody
+    
     export type CreateCartItemMutationError = ErrorResponse
 
     /**
- * @summary Создать элемент корзины
+ * @summary Удалить элемент корзины
  */
 export const useCreateCartItem = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,{data: PkgBackendstoryCartItemCartItemCreateRequestBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCartItem>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
       const mutationOptions = getCreateCartItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Обновляет элемент корзины
+ * @summary Обновить элемент корзины
+ */
+export const updateCartItem = (
+    cartItemUpdateRequest: CartItemUpdateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<CartItemDTO>(
+      {url: `/cart-items`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: cartItemUpdateRequest
+    },
+      options);
+    }
+  
+
+
+export const getUpdateCartItemMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: CartItemUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: CartItemUpdateRequest}, TContext> => {
+
+const mutationKey = ['updateCartItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCartItem>>, {data: CartItemUpdateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateCartItem(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof updateCartItem>>>
+    export type UpdateCartItemMutationBody = CartItemUpdateRequest
+    export type UpdateCartItemMutationError = ErrorResponse
+
+    /**
+ * @summary Обновить элемент корзины
+ */
+export const useUpdateCartItem = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCartItem>>, TError,{data: CartItemUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getUpdateCartItemMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -671,7 +673,7 @@ export function useGetCartItemByCartId<TData = Awaited<ReturnType<typeof getCart
  * Выполняет поиск элементов корзины по заданным критериям
  * @summary Поиск элементов корзины
  */
-export const getCartItemSearch = (
+export const searchCartItem = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -687,11 +689,11 @@ export const getCartItemSearch = (
   
 
 
-export const getGetCartItemSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchCartItemMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCartItem>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchCartItem>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getCartItemSearch'];
+const mutationKey = ['searchCartItem'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -701,10 +703,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCartItemSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchCartItem>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getCartItemSearch(data,requestOptions)
+          return  searchCartItem(data,requestOptions)
         }
 
         
@@ -712,18 +714,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetCartItemSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCartItemSearch>>>
-    export type GetCartItemSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetCartItemSearchMutationError = ErrorResponse
+    export type SearchCartItemMutationResult = NonNullable<Awaited<ReturnType<typeof searchCartItem>>>
+    export type SearchCartItemMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchCartItemMutationError = ErrorResponse
 
     /**
  * @summary Поиск элементов корзины
  */
-export const useGetCartItemSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartItemSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchCartItem = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCartItem>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetCartItemSearchMutationOptions(options);
+      const mutationOptions = getSearchCartItemMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -933,7 +935,7 @@ export function useGetCartByPersonId<TData = Awaited<ReturnType<typeof getCartBy
  * Выполняет поиск корзин по заданным критериям
  * @summary Поиск корзин
  */
-export const getCartSearch = (
+export const searchCart = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -949,11 +951,11 @@ export const getCartSearch = (
   
 
 
-export const getGetCartSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchCartMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCart>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchCart>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getCartSearch'];
+const mutationKey = ['searchCart'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -963,10 +965,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCartSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchCart>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getCartSearch(data,requestOptions)
+          return  searchCart(data,requestOptions)
         }
 
         
@@ -974,18 +976,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetCartSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCartSearch>>>
-    export type GetCartSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetCartSearchMutationError = ErrorResponse
+    export type SearchCartMutationResult = NonNullable<Awaited<ReturnType<typeof searchCart>>>
+    export type SearchCartMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchCartMutationError = ErrorResponse
 
     /**
  * @summary Поиск корзин
  */
-export const useGetCartSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCartSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchCart = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCart>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetCartSearchMutationOptions(options);
+      const mutationOptions = getSearchCartMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -1335,7 +1337,7 @@ export function useGetCategoryByCode<TData = Awaited<ReturnType<typeof getCatego
  * Выполняет поиск категорий по заданным критериям
  * @summary Поиск категорий
  */
-export const getCategorySearch = (
+export const searchCategory = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1351,11 +1353,11 @@ export const getCategorySearch = (
   
 
 
-export const getGetCategorySearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchCategoryMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCategory>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchCategory>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getCategorySearch'];
+const mutationKey = ['searchCategory'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1365,10 +1367,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCategorySearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchCategory>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getCategorySearch(data,requestOptions)
+          return  searchCategory(data,requestOptions)
         }
 
         
@@ -1376,18 +1378,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetCategorySearchMutationResult = NonNullable<Awaited<ReturnType<typeof getCategorySearch>>>
-    export type GetCategorySearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetCategorySearchMutationError = ErrorResponse
+    export type SearchCategoryMutationResult = NonNullable<Awaited<ReturnType<typeof searchCategory>>>
+    export type SearchCategoryMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchCategoryMutationError = ErrorResponse
 
     /**
  * @summary Поиск категорий
  */
-export const useGetCategorySearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCategorySearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchCategory = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchCategory>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetCategorySearchMutationOptions(options);
+      const mutationOptions = getSearchCategoryMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -1591,19 +1593,19 @@ export function useGetEnumValueAll<TData = Awaited<ReturnType<typeof getEnumValu
 
 
 /**
- * Создает новое значение перечисления
- * @summary Создать значение перечисления
+ * Создает новое перечисление в системе
+ * @summary Создать перечисление
  */
 export const createEnumValue = (
-    enumValueCreateRequest: EnumValueCreateRequest,
+    enumCreateRequest: EnumCreateRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<EnumValueDTO>(
-      {url: `/enumeration-values`, method: 'POST',
+      return customInstance<EnumDTO>(
+      {url: `/enumerations`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: enumValueCreateRequest, signal
+      data: enumCreateRequest, signal
     },
       options);
     }
@@ -1611,8 +1613,8 @@ export const createEnumValue = (
 
 
 export const getCreateEnumValueMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumCreateRequest}, TContext> => {
 
 const mutationKey = ['createEnumValue'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -1624,7 +1626,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnumValue>>, {data: EnumValueCreateRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnumValue>>, {data: EnumCreateRequest}> = (props) => {
           const {data} = props ?? {};
 
           return  createEnumValue(data,requestOptions)
@@ -1636,14 +1638,14 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateEnumValueMutationResult = NonNullable<Awaited<ReturnType<typeof createEnumValue>>>
-    export type CreateEnumValueMutationBody = EnumValueCreateRequest
+    export type CreateEnumValueMutationBody = EnumCreateRequest
     export type CreateEnumValueMutationError = ErrorResponse
 
     /**
- * @summary Создать значение перечисления
+ * @summary Создать перечисление
  */
 export const useCreateEnumValue = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumValueCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnumValue>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
       const mutationOptions = getCreateEnumValueMutationOptions(options);
@@ -1725,7 +1727,7 @@ export function useGetEnumValueByEnumId<TData = Awaited<ReturnType<typeof getEnu
  * Выполняет поиск значений перечислений по заданным критериям
  * @summary Поиск значений перечислений
  */
-export const getEnumValueSearch = (
+export const searchEnumValue = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -1741,11 +1743,11 @@ export const getEnumValueSearch = (
   
 
 
-export const getGetEnumValueSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchEnumValueMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchEnumValue>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchEnumValue>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getEnumValueSearch'];
+const mutationKey = ['searchEnumValue'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -1755,10 +1757,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getEnumValueSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchEnumValue>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getEnumValueSearch(data,requestOptions)
+          return  searchEnumValue(data,requestOptions)
         }
 
         
@@ -1766,18 +1768,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetEnumValueSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getEnumValueSearch>>>
-    export type GetEnumValueSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetEnumValueSearchMutationError = ErrorResponse
+    export type SearchEnumValueMutationResult = NonNullable<Awaited<ReturnType<typeof searchEnumValue>>>
+    export type SearchEnumValueMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchEnumValueMutationError = ErrorResponse
 
     /**
  * @summary Поиск значений перечислений
  */
-export const useGetEnumValueSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumValueSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchEnumValue = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchEnumValue>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetEnumValueSearchMutationOptions(options);
+      const mutationOptions = getSearchEnumValueMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -1981,67 +1983,6 @@ export function useGetEnumAll<TData = Awaited<ReturnType<typeof getEnumAll>>, TE
 
 
 /**
- * Создает новое перечисление в системе
- * @summary Создать перечисление
- */
-export const createEnum = (
-    enumCreateRequest: EnumCreateRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<EnumDTO>(
-      {url: `/enumerations`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: enumCreateRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getCreateEnumMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext> => {
-
-const mutationKey = ['createEnum'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEnum>>, {data: EnumCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createEnum(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateEnumMutationResult = NonNullable<Awaited<ReturnType<typeof createEnum>>>
-    export type CreateEnumMutationBody = EnumCreateRequest
-    export type CreateEnumMutationError = ErrorResponse
-
-    /**
- * @summary Создать перечисление
- */
-export const useCreateEnum = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEnum>>, TError,{data: EnumCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient) => {
-
-      const mutationOptions = getCreateEnumMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
  * Возвращает перечисление по указанному коду
  * @summary Получить перечисление по коду
  */
@@ -2115,7 +2056,7 @@ export function useGetEnumByCode<TData = Awaited<ReturnType<typeof getEnumByCode
  * Выполняет поиск перечислений по заданным критериям
  * @summary Поиск перечислений
  */
-export const getEnumSearch = (
+export const searchEnum = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2131,11 +2072,11 @@ export const getEnumSearch = (
   
 
 
-export const getGetEnumSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchEnumMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchEnum>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchEnum>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getEnumSearch'];
+const mutationKey = ['searchEnum'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2145,10 +2086,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getEnumSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchEnum>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getEnumSearch(data,requestOptions)
+          return  searchEnum(data,requestOptions)
         }
 
         
@@ -2156,18 +2097,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetEnumSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getEnumSearch>>>
-    export type GetEnumSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetEnumSearchMutationError = ErrorResponse
+    export type SearchEnumMutationResult = NonNullable<Awaited<ReturnType<typeof searchEnum>>>
+    export type SearchEnumMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchEnumMutationError = ErrorResponse
 
     /**
  * @summary Поиск перечислений
  */
-export const useGetEnumSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getEnumSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchEnum = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchEnum>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetEnumSearchMutationOptions(options);
+      const mutationOptions = getSearchEnumMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -2362,6 +2303,1039 @@ export const useLoginUser = <TError = ErrorResponse,
     }
     
 /**
+ * Создает новый элемент заказа, связывая товар из корзины с заказом
+ * @summary Создать элемент заказа
+ */
+export const createOrderItem = (
+    orderItemCreateRequest: OrderItemCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderItemDTO>(
+      {url: `/order-items`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: orderItemCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateOrderItemMutationOptions = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrderItem>>, TError,{data: OrderItemCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOrderItem>>, TError,{data: OrderItemCreateRequest}, TContext> => {
+
+const mutationKey = ['createOrderItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrderItem>>, {data: OrderItemCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOrderItem(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOrderItemMutationResult = NonNullable<Awaited<ReturnType<typeof createOrderItem>>>
+    export type CreateOrderItemMutationBody = OrderItemCreateRequest
+    export type CreateOrderItemMutationError = ErrorResponse | ValidationErrorResponse
+
+    /**
+ * @summary Создать элемент заказа
+ */
+export const useCreateOrderItem = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrderItem>>, TError,{data: OrderItemCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateOrderItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает список элементов заказа по ID заказа
+ * @summary Получить элементы заказа
+ */
+export const getOrderItemsByOrderId = (
+    orderId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderItemDTO[]>(
+      {url: `/order-items/order/${orderId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrderItemsByOrderIdQueryKey = (orderId?: number,) => {
+    return [
+    'order-items','order',orderId
+    ] as const;
+    }
+
+    
+export const getGetOrderItemsByOrderIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrderItemsByOrderId>>, TError = ErrorResponse>(orderId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderItemsByOrderId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrderItemsByOrderIdQueryKey(orderId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrderItemsByOrderId>>> = ({ signal }) => getOrderItemsByOrderId(orderId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(orderId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrderItemsByOrderId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrderItemsByOrderIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrderItemsByOrderId>>>
+export type GetOrderItemsByOrderIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить элементы заказа
+ */
+
+export function useGetOrderItemsByOrderId<TData = Awaited<ReturnType<typeof getOrderItemsByOrderId>>, TError = ErrorResponse>(
+ orderId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderItemsByOrderId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrderItemsByOrderIdQueryOptions(orderId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает список элементов заказа по указанным критериям поиска с пагинацией
+ * @summary Поиск элементов заказа
+ */
+export const searchOrderItems = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderItemDTO[]>(
+      {url: `/order-items/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getSearchOrderItemsMutationOptions = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchOrderItems>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchOrderItems>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['searchOrderItems'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchOrderItems>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  searchOrderItems(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SearchOrderItemsMutationResult = NonNullable<Awaited<ReturnType<typeof searchOrderItems>>>
+    export type SearchOrderItemsMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchOrderItemsMutationError = ErrorResponse | ValidationErrorResponse
+
+    /**
+ * @summary Поиск элементов заказа
+ */
+export const useSearchOrderItems = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchOrderItems>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getSearchOrderItemsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает элемент заказа по указанному идентификатору
+ * @summary Получить элемент заказа по ID
+ */
+export const getOrderItemById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderItemDTO>(
+      {url: `/order-items/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrderItemByIdQueryKey = (id?: number,) => {
+    return [
+    'order-items',id
+    ] as const;
+    }
+
+    
+export const getGetOrderItemByIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrderItemById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderItemById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrderItemByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrderItemById>>> = ({ signal }) => getOrderItemById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrderItemById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrderItemByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrderItemById>>>
+export type GetOrderItemByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить элемент заказа по ID
+ */
+
+export function useGetOrderItemById<TData = Awaited<ReturnType<typeof getOrderItemById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderItemById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrderItemByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет элемент заказа по ID (только для элементов в определенных статусах)
+ * @summary Удалить элемент заказа
+ */
+export const deleteOrderItem = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/order-items/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteOrderItemMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOrderItem>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteOrderItem>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteOrderItem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOrderItem>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteOrderItem(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteOrderItemMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOrderItem>>>
+    
+    export type DeleteOrderItemMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить элемент заказа
+ */
+export const useDeleteOrderItem = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOrderItem>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getDeleteOrderItemMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Изменяет статус элемента заказа (например, готов к отгрузке, отгружен и т.д.)
+ * @summary Изменить статус элемента заказа
+ */
+export const changeOrderItemStatus = (
+    id: number,
+    status: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderItemDTO>(
+      {url: `/order-items/${id}/change-status/${status}`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getChangeOrderItemStatusMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeOrderItemStatus>>, TError,{id: number;status: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof changeOrderItemStatus>>, TError,{id: number;status: string}, TContext> => {
+
+const mutationKey = ['changeOrderItemStatus'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changeOrderItemStatus>>, {id: number;status: string}> = (props) => {
+          const {id,status} = props ?? {};
+
+          return  changeOrderItemStatus(id,status,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangeOrderItemStatusMutationResult = NonNullable<Awaited<ReturnType<typeof changeOrderItemStatus>>>
+    
+    export type ChangeOrderItemStatusMutationError = ErrorResponse
+
+    /**
+ * @summary Изменить статус элемента заказа
+ */
+export const useChangeOrderItemStatus = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeOrderItemStatus>>, TError,{id: number;status: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getChangeOrderItemStatusMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Создает новый заказ на основе товаров из корзины
+ * @summary Создать заказ
+ */
+export const createOrder = (
+    orderCreateRequest: OrderCreateRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO>(
+      {url: `/orders`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: orderCreateRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getCreateOrderMutationOptions = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrder>>, TError,{data: OrderCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOrder>>, TError,{data: OrderCreateRequest}, TContext> => {
+
+const mutationKey = ['createOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOrder>>, {data: OrderCreateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOrder(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOrderMutationResult = NonNullable<Awaited<ReturnType<typeof createOrder>>>
+    export type CreateOrderMutationBody = OrderCreateRequest
+    export type CreateOrderMutationError = ErrorResponse | ValidationErrorResponse
+
+    /**
+ * @summary Создать заказ
+ */
+export const useCreateOrder = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOrder>>, TError,{data: OrderCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getCreateOrderMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Добавляет детали заказа и назначает менеджера
+ * @summary Добавить детали заказа
+ */
+export const addDetails = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO>(
+      {url: `/orders/add-details`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getAddDetailsMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addDetails>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof addDetails>>, TError,void, TContext> => {
+
+const mutationKey = ['addDetails'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addDetails>>, void> = () => {
+          
+
+          return  addDetails(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AddDetailsMutationResult = NonNullable<Awaited<ReturnType<typeof addDetails>>>
+    
+    export type AddDetailsMutationError = ErrorResponse
+
+    /**
+ * @summary Добавить детали заказа
+ */
+export const useAddDetails = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addDetails>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getAddDetailsMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает список заказов по ID клиента
+ * @summary Получить заказы клиента
+ */
+export const getOrdersByClientId = (
+    clientId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO[]>(
+      {url: `/orders/client/${clientId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrdersByClientIdQueryKey = (clientId?: number,) => {
+    return [
+    'orders','client',clientId
+    ] as const;
+    }
+
+    
+export const getGetOrdersByClientIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrdersByClientId>>, TError = ErrorResponse>(clientId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByClientId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersByClientIdQueryKey(clientId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrdersByClientId>>> = ({ signal }) => getOrdersByClientId(clientId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(clientId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrdersByClientId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersByClientIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrdersByClientId>>>
+export type GetOrdersByClientIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить заказы клиента
+ */
+
+export function useGetOrdersByClientId<TData = Awaited<ReturnType<typeof getOrdersByClientId>>, TError = ErrorResponse>(
+ clientId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByClientId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersByClientIdQueryOptions(clientId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает список заказов, назначенных на менеджера
+ * @summary Получить заказы менеджера
+ */
+export const getOrdersByManagerId = (
+    managerId: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO[]>(
+      {url: `/orders/manager/${managerId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrdersByManagerIdQueryKey = (managerId?: number,) => {
+    return [
+    'orders','manager',managerId
+    ] as const;
+    }
+
+    
+export const getGetOrdersByManagerIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrdersByManagerId>>, TError = ErrorResponse>(managerId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersByManagerIdQueryKey(managerId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrdersByManagerId>>> = ({ signal }) => getOrdersByManagerId(managerId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(managerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersByManagerIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrdersByManagerId>>>
+export type GetOrdersByManagerIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить заказы менеджера
+ */
+
+export function useGetOrdersByManagerId<TData = Awaited<ReturnType<typeof getOrdersByManagerId>>, TError = ErrorResponse>(
+ managerId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerId>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersByManagerIdQueryOptions(managerId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает список заказов, назначенных на менеджера с указанным статусом
+ * @summary Получить заказы менеджера по статусу
+ */
+export const getOrdersByManagerIdAndStatus = (
+    managerId: number,
+    status: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO[]>(
+      {url: `/orders/manager/${managerId}/status/${status}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrdersByManagerIdAndStatusQueryKey = (managerId?: number,
+    status?: string,) => {
+    return [
+    'orders','manager',managerId,'status',status
+    ] as const;
+    }
+
+    
+export const getGetOrdersByManagerIdAndStatusQueryOptions = <TData = Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>, TError = ErrorResponse>(managerId: number,
+    status: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersByManagerIdAndStatusQueryKey(managerId,status);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>> = ({ signal }) => getOrdersByManagerIdAndStatus(managerId,status, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(managerId && status), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersByManagerIdAndStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>>
+export type GetOrdersByManagerIdAndStatusQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить заказы менеджера по статусу
+ */
+
+export function useGetOrdersByManagerIdAndStatus<TData = Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>, TError = ErrorResponse>(
+ managerId: number,
+    status: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByManagerIdAndStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersByManagerIdAndStatusQueryOptions(managerId,status,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает список заказов по указанным критериям поиска с пагинацией
+ * @summary Поиск заказов
+ */
+export const searchOrders = (
+    githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO[]>(
+      {url: `/orders/search`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getSearchOrdersMutationOptions = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchOrders>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchOrders>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+
+const mutationKey = ['searchOrders'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchOrders>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  searchOrders(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SearchOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof searchOrders>>>
+    export type SearchOrdersMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchOrdersMutationError = ErrorResponse | ValidationErrorResponse
+
+    /**
+ * @summary Поиск заказов
+ */
+export const useSearchOrders = <TError = ErrorResponse | ValidationErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchOrders>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getSearchOrdersMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Возвращает список заказов с указанным статусом
+ * @summary Получить заказы по статусу
+ */
+export const getOrdersByStatus = (
+    status: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO[]>(
+      {url: `/orders/status/${status}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrdersByStatusQueryKey = (status?: string,) => {
+    return [
+    'orders','status',status
+    ] as const;
+    }
+
+    
+export const getGetOrdersByStatusQueryOptions = <TData = Awaited<ReturnType<typeof getOrdersByStatus>>, TError = ErrorResponse>(status: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersByStatusQueryKey(status);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrdersByStatus>>> = ({ signal }) => getOrdersByStatus(status, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(status), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrdersByStatus>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersByStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getOrdersByStatus>>>
+export type GetOrdersByStatusQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить заказы по статусу
+ */
+
+export function useGetOrdersByStatus<TData = Awaited<ReturnType<typeof getOrdersByStatus>>, TError = ErrorResponse>(
+ status: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersByStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersByStatusQueryOptions(status,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Возвращает заказ по указанному идентификатору
+ * @summary Получить заказ по ID
+ */
+export const getOrderById = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO>(
+      {url: `/orders/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+
+
+export const getGetOrderByIdQueryKey = (id?: number,) => {
+    return [
+    'orders',id
+    ] as const;
+    }
+
+    
+export const getGetOrderByIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrderById>>, TError = ErrorResponse>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrderByIdQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrderById>>> = ({ signal }) => getOrderById(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrderById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrderByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrderById>>>
+export type GetOrderByIdQueryError = ErrorResponse
+
+
+/**
+ * @summary Получить заказ по ID
+ */
+
+export function useGetOrderById<TData = Awaited<ReturnType<typeof getOrderById>>, TError = ErrorResponse>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrderById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrderByIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * Удаляет заказ по ID (только для заказов в определенных статусах)
+ * @summary Удалить заказ
+ */
+export const deleteOrder = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/orders/${id}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteOrderMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOrder>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteOrder>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteOrder'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteOrder>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteOrder(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteOrderMutationResult = NonNullable<Awaited<ReturnType<typeof deleteOrder>>>
+    
+    export type DeleteOrderMutationError = ErrorResponse
+
+    /**
+ * @summary Удалить заказ
+ */
+export const useDeleteOrder = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteOrder>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getDeleteOrderMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Изменяет статус заказа и назначает менеджера (если не назначен)
+ * @summary Изменить статус заказа
+ */
+export const changeOrderStatus = (
+    id: number,
+    status: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OrderDTO>(
+      {url: `/orders/${id}/status/${status}`, method: 'POST', signal
+    },
+      options);
+    }
+  
+
+
+export const getChangeOrderStatusMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeOrderStatus>>, TError,{id: number;status: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof changeOrderStatus>>, TError,{id: number;status: string}, TContext> => {
+
+const mutationKey = ['changeOrderStatus'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changeOrderStatus>>, {id: number;status: string}> = (props) => {
+          const {id,status} = props ?? {};
+
+          return  changeOrderStatus(id,status,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangeOrderStatusMutationResult = NonNullable<Awaited<ReturnType<typeof changeOrderStatus>>>
+    
+    export type ChangeOrderStatusMutationError = ErrorResponse
+
+    /**
+ * @summary Изменить статус заказа
+ */
+export const useChangeOrderStatus = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeOrderStatus>>, TError,{id: number;status: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getChangeOrderStatusMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * Возвращает список всех персон в системе
  * @summary Получить всех персон
  */
@@ -2496,7 +3470,7 @@ export const useCreatePerson = <TError = ErrorResponse,
  * Выполняет поиск людей по заданным критериям
  * @summary Поиск людей
  */
-export const getPersonSearch = (
+export const searchPerson = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -2512,11 +3486,11 @@ export const getPersonSearch = (
   
 
 
-export const getGetPersonSearchMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
+export const getSearchPersonMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchPerson>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof searchPerson>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext> => {
 
-const mutationKey = ['getPersonSearch'];
+const mutationKey = ['searchPerson'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -2526,10 +3500,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getPersonSearch>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof searchPerson>>, {data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  getPersonSearch(data,requestOptions)
+          return  searchPerson(data,requestOptions)
         }
 
         
@@ -2537,18 +3511,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type GetPersonSearchMutationResult = NonNullable<Awaited<ReturnType<typeof getPersonSearch>>>
-    export type GetPersonSearchMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
-    export type GetPersonSearchMutationError = ErrorResponse
+    export type SearchPersonMutationResult = NonNullable<Awaited<ReturnType<typeof searchPerson>>>
+    export type SearchPersonMutationBody = GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
+    export type SearchPersonMutationError = ErrorResponse
 
     /**
  * @summary Поиск людей
  */
-export const useGetPersonSearch = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getPersonSearch>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useSearchPerson = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof searchPerson>>, TError,{data: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
-      const mutationOptions = getGetPersonSearchMutationOptions(options);
+      const mutationOptions = getSearchPersonMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
@@ -3147,6 +4121,128 @@ export function useGetProductByCategoryId<TData = Awaited<ReturnType<typeof getP
 
 
 /**
+ * Изменяет цену продукта на указанное значение
+ * @summary Изменить цену продукта
+ */
+export const changeProductPrice = (
+    productPriceChangeRequest: ProductPriceChangeRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/products/change-price`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: productPriceChangeRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getChangeProductPriceMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeProductPrice>>, TError,{data: ProductPriceChangeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof changeProductPrice>>, TError,{data: ProductPriceChangeRequest}, TContext> => {
+
+const mutationKey = ['changeProductPrice'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changeProductPrice>>, {data: ProductPriceChangeRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  changeProductPrice(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangeProductPriceMutationResult = NonNullable<Awaited<ReturnType<typeof changeProductPrice>>>
+    export type ChangeProductPriceMutationBody = ProductPriceChangeRequest
+    export type ChangeProductPriceMutationError = ErrorResponse
+
+    /**
+ * @summary Изменить цену продукта
+ */
+export const useChangeProductPrice = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeProductPrice>>, TError,{data: ProductPriceChangeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getChangeProductPriceMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * Изменяет статус продукта на указанный код статуса
+ * @summary Изменить статус продукта
+ */
+export const changeProductStatus = (
+    productStatusChangeRequest: ProductStatusChangeRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ProductDTO>(
+      {url: `/products/change-status`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: productStatusChangeRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getChangeProductStatusMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeProductStatus>>, TError,{data: ProductStatusChangeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof changeProductStatus>>, TError,{data: ProductStatusChangeRequest}, TContext> => {
+
+const mutationKey = ['changeProductStatus'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changeProductStatus>>, {data: ProductStatusChangeRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  changeProductStatus(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangeProductStatusMutationResult = NonNullable<Awaited<ReturnType<typeof changeProductStatus>>>
+    export type ChangeProductStatusMutationBody = ProductStatusChangeRequest
+    export type ChangeProductStatusMutationError = ErrorResponse
+
+    /**
+ * @summary Изменить статус продукта
+ */
+export const useChangeProductStatus = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changeProductStatus>>, TError,{data: ProductStatusChangeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient) => {
+
+      const mutationOptions = getChangeProductStatusMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * Возвращает продукт по указанному коду
  * @summary Получить продукт по коду
  */
@@ -3220,7 +4316,7 @@ export function useGetProductByCode<TData = Awaited<ReturnType<typeof getProduct
  * Выполняет поиск продуктов по заданным критериям
  * @summary Поиск продуктов
  */
-export const getProductSearch = (
+export const searchProduct = (
     githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -3237,51 +4333,51 @@ export const getProductSearch = (
 
 
 
-export const getGetProductSearchInfiniteQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
+export const getSearchProductInfiniteQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
     return [
     'infinite', 'products','search', githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
     ] as const;
     }
 
-export const getGetProductSearchQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
+export const getSearchProductQueryKey = (githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody?: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,) => {
     return [
     'products','search', githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody
     ] as const;
     }
 
     
-export const getGetProductSearchInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof getProductSearch>>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getSearchProductInfiniteQueryOptions = <TData = InfiniteData<Awaited<ReturnType<typeof searchProduct>>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetProductSearchInfiniteQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
+  const queryKey =  queryOptions?.queryKey ?? getSearchProductInfiniteQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductSearch>>> = ({ signal, pageParam }) => getProductSearch({ ...githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, offset: pageParam as number }, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchProduct>>> = ({ signal, pageParam }) => searchProduct({ ...githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, offset: pageParam as number }, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseInfiniteQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetProductSearchInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getProductSearch>>>
-export type GetProductSearchInfiniteQueryError = ErrorResponse
+export type SearchProductInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof searchProduct>>>
+export type SearchProductInfiniteQueryError = ErrorResponse
 
 
 /**
  * @summary Поиск продуктов
  */
 
-export function useGetProductSearchInfinite<TData = InfiniteData<Awaited<ReturnType<typeof getProductSearch>>>, TError = ErrorResponse>(
- githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export function useSearchProductInfinite<TData = InfiniteData<Awaited<ReturnType<typeof searchProduct>>>, TError = ErrorResponse>(
+ githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetProductSearchInfiniteQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
+  const queryOptions = getSearchProductInfiniteQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
 
   const query = useInfiniteQuery(queryOptions, queryClient) as  UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -3293,38 +4389,38 @@ export function useGetProductSearchInfinite<TData = InfiniteData<Awaited<ReturnT
 
 
 
-export const getGetProductSearchQueryOptions = <TData = Awaited<ReturnType<typeof getProductSearch>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getSearchProductQueryOptions = <TData = Awaited<ReturnType<typeof searchProduct>>, TError = ErrorResponse>(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetProductSearchQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
+  const queryKey =  queryOptions?.queryKey ?? getSearchProductQueryKey(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProductSearch>>> = ({ signal }) => getProductSearch(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchProduct>>> = ({ signal }) => searchProduct(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetProductSearchQueryResult = NonNullable<Awaited<ReturnType<typeof getProductSearch>>>
-export type GetProductSearchQueryError = ErrorResponse
+export type SearchProductQueryResult = NonNullable<Awaited<ReturnType<typeof searchProduct>>>
+export type SearchProductQueryError = ErrorResponse
 
 
 /**
  * @summary Поиск продуктов
  */
 
-export function useGetProductSearch<TData = Awaited<ReturnType<typeof getProductSearch>>, TError = ErrorResponse>(
- githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getProductSearch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export function useSearchProduct<TData = Awaited<ReturnType<typeof searchProduct>>, TError = ErrorResponse>(
+ githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody: GithubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchProduct>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetProductSearchQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
+  const queryOptions = getSearchProductQueryOptions(githubComActuallyHelloBackendstoryPkgCoreSearchCriteriaBody,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -3413,11 +4509,13 @@ export function useGetProductById<TData = Awaited<ReturnType<typeof getProductBy
  */
 export const deleteProduct = (
     id: number,
+    params?: DeleteProductParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
       
       return customInstance<void>(
-      {url: `/products/${id}`, method: 'DELETE'
+      {url: `/products/${id}`, method: 'DELETE',
+        params
     },
       options);
     }
@@ -3425,8 +4523,8 @@ export const deleteProduct = (
 
 
 export const getDeleteProductMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number;params?: DeleteProductParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number;params?: DeleteProductParams}, TContext> => {
 
 const mutationKey = ['deleteProduct'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -3438,10 +4536,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProduct>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteProduct>>, {id: number;params?: DeleteProductParams}> = (props) => {
+          const {id,params} = props ?? {};
 
-          return  deleteProduct(id,requestOptions)
+          return  deleteProduct(id,params,requestOptions)
         }
 
         
@@ -3457,132 +4555,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
  * @summary Удалить продукт
  */
 export const useDeleteProduct = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteProduct>>, TError,{id: number;params?: DeleteProductParams}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient) => {
 
       const mutationOptions = getDeleteProductMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
- * Оформляет покупку всех товаров в указанной корзине
- * @summary Оформить покупку корзины
- */
-export const purchaseCart = (
-    purchaseRequest: PurchaseRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<void>(
-      {url: `/purchases`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: purchaseRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getPurchaseCartMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext> => {
-
-const mutationKey = ['purchaseCart'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof purchaseCart>>, {data: PurchaseRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  purchaseCart(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PurchaseCartMutationResult = NonNullable<Awaited<ReturnType<typeof purchaseCart>>>
-    export type PurchaseCartMutationBody = PurchaseRequest
-    export type PurchaseCartMutationError = ErrorResponse
-
-    /**
- * @summary Оформить покупку корзины
- */
-export const usePurchaseCart = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof purchaseCart>>, TError,{data: PurchaseRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient) => {
-
-      const mutationOptions = getPurchaseCartMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
- * Добавляет указанное количество товара в корзину пользователя
- * @summary Добавить товар в корзину
- */
-export const addToCart = (
-    addToCartRequest: AddToCartRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<void>(
-      {url: `/purchases/cart`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: addToCartRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getAddToCartMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext> => {
-
-const mutationKey = ['addToCart'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof addToCart>>, {data: AddToCartRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  addToCart(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type AddToCartMutationResult = NonNullable<Awaited<ReturnType<typeof addToCart>>>
-    export type AddToCartMutationBody = AddToCartRequest
-    export type AddToCartMutationError = ErrorResponse
-
-    /**
- * @summary Добавить товар в корзину
- */
-export const useAddToCart = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof addToCart>>, TError,{data: AddToCartRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient) => {
-
-      const mutationOptions = getAddToCartMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

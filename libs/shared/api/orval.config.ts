@@ -27,7 +27,7 @@ export default defineConfig({
           name: "customInstance",
         },
         operations: {
-          getProductSearch: {
+          searchProduct: {
             query: {
               useQuery: true,
               useInfinite: true,

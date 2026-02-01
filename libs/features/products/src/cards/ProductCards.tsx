@@ -1,5 +1,5 @@
 import { Skeleton, Stack, Typography } from "@mui/material";
-import { useGetProductSearchInfinite } from "@store-frontend/shared-api";
+import { useSearchProductInfinite } from "@store-frontend/shared-api";
 import { VirtualizedGrid } from "@store-frontend/shared-ui";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router";
@@ -16,7 +16,7 @@ export function ProductsCards() {
   const categoryId = searchParams.get("category");
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
-    useGetProductSearchInfinite(
+    useSearchProductInfinite(
       {
         limit: LIMIT,
         ...(categoryId
@@ -38,12 +38,12 @@ export function ProductsCards() {
             return lastPage.length === LIMIT ? allPages.length * LIMIT : null;
           },
         },
-      }
+      },
     );
 
   const flatResult = useMemo(
     () => data?.pages.flatMap((page) => page) ?? [],
-    [data]
+    [data],
   );
 
   if (!flatResult.length && !isLoading) {
